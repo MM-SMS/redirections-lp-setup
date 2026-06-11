@@ -1,0 +1,89 @@
+@charset "utf-8";
+/* CSS Document */
+.yellow{color:#fff000;}
+.blue{color:#114d85;}
+.strikeout{ 
+  position: relative;
+}
+.strikeout::after {
+  border-bottom: 0.10em solid #ff0000;
+  content: "";
+  left: 0;
+  margin-top: calc(0.120em / 2 * -1);
+  position: absolute;
+  right: 0;
+  top: 54%;
+  transform:rotate(-10deg);
+  -webkit-  transform:rotate(-10deg);
+}
+.pkgbtn, .s10btn{
+	height:70px;
+	width:100%;
+	background:#00bc40;
+	border-radius:6px;
+	font-weight:bold;
+	font-size:24px;
+	line-height:70px;
+	color:#fff;
+	text-align:center;
+	border:none;
+	outline-none;
+	margin:25px auto 0 auto;
+	display:block;
+	box-shadow:0 5px 0 #cdcbcb;	
+}
+.pkgbtn{font-size:25px;margin:10px auto 0 auto;text-transform:uppercase;}
+.pkg3btn{margin:24px auto 0 auto;}
+.s10btn{text-transform:uppercase;margin:10px 0 0 0;width:94%;}
+.btnarw2{margin:0 0 0 5px;}
+.btnarw3{margin:0 0 0 10px;}
+@media only screen and (max-width: 1200px){
+.pkgbtn, .s10btn{height:60px;line-height:60px;}
+.s10btn{font-size:21px;}
+.btnarw2 {
+    margin: 0 0 2px 5px;
+	width:26px;height:auto;
+}
+}
+@media only screen and (max-width: 1030px){
+.pkgbtn, .s10btn{height:50px;line-height:50px;font-size:18px;box-shadow:0 4px 0 #cdcbcb;margin:15px auto 0 auto;}
+.pkgbtn{font-size:20px;}
+.s10btn{margin:32px 0 0 0;font-size:18px;}
+.btnarw3{width:27px;height:auto;margin: 0 0 1px 10px;}
+.s10btn .btnarw3{width:20px;height:auto;margin:0 0 0 5px;}
+}
+@media only screen and (max-width: 767px){
+.pkgbtn, .pkg3btn{margin:10px auto 0 auto;}
+.s10btn{margin:0 auto;font-size:20px;width:400px;}
+.s10btn .btnarw3{width:25px;height:auto;margin:0 0 1px 5px;}
+}
+@media only screen and (max-width: 479px){
+.s10btn{width:96%;}
+}
+/*===============================*/
+.show-479, .show-tab, .show-767, .show-400, .show-340, .show-359, .show-389{display:none;}
+@media only screen and (max-width: 1030px){
+.show-tab{display:block;}
+.hide-tab{display:none;}
+}
+@media only screen and (max-width: 767px){
+.hide-767{display:none;}
+.show-767{display:block;}
+}
+@media only screen and (max-width: 479px){
+.show-479{display:block;}
+.hide-479{display:none;}
+}
+@media only screen and (max-width: 400px){
+.show-400{display:block;}
+.hide-400{display:none;}
+}
+@media only screen and (max-width: 389px){
+.hide-389{display:none;}
+.show-389{display:block;}
+}
+@media only screen and (max-width: 359px){
+.hide-359{display:none;}
+.show-359{display:block;}
+}
+

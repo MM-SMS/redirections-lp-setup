@@ -1,0 +1,92 @@
+@media (max-width: 1023px) {
+	.gallery > li{margin: 4px;}
+	.secure_form h1{font-size: 30px;}
+	.gaurentee_box p{padding-left: 110px;}
+	.gaurentee_box > img{max-width: 100px;}
+	.cart_billing .form-control{max-width: 140px;}
+	.cart_billing .exp_date .form-control{width: 61px; padding: 5px;}
+	.cart_billing .val_code .form-control{width: 62px;}
+	.cart_info.clearfix{padding-bottom: 15px; }
+	.play_list ul li{margin: 5px 7px 0 0;}
+	.li_up_en {
+    background: url('http://7331.cdn.beyondhosting.net/srffpictures/check.jpg') no-repeat scroll left 10% transparent ;
+    padding: 10px 0px 3px 50px;
+    list-style: none outside none;
+    margin: 0px;
+    width: 100%;
+	float:left;
+}
+.cover_tsl_en img{margin-left:auto; margin-right:auto;float:none; }
+.bund_disc_textarea{display:block}
+.bund_disc_textarea_left{float:none;width:100% }
+.bund_disc_textarea_right{float:none;width:100%;background: none repeat scroll 0% 0% #E4E6E9; }
+.ulli_bund_disc{float:left}
+}
+@media (max-width: 992px) {.my_video{padding: 56.25% 0 0 0 !important;position: relative;margin: auto;width: 100% !important;}
+	.index_page {padding-left: 5px; padding-right: 5px;}}
+@media (max-width: 767px) {
+	
+	.index_title span{line-height: 20px;}
+	.container{width: 98%; margin: auto;}
+	.bestdeal_outer{padding: 10px;}
+	.warn_img > img {width: 100%;}
+	li {color: #000000; padding-bottom: 5px;}
+	.thank_img_tile{padding: 0;}
+	.gallery > li{width: 48%;}
+	.bonus_blocks li,.bonus_blocks li:nth-child(2n+2){width: 96%; float: none; margin:15px auto;}
+	.cart_details{width: 100%; margin-top: 25px;}
+	.cart_billing{width: 100%; }
+	.cart_billing .form-control {max-width: 250px;}
+	.cart_billing label{width: 100%;}
+	.gaurentee_box{min-height: 125px;}
+	.secure_form{width: 100%; text-align: center;}
+	.secure_form h1{display: inline-block; }
+	.secure_links ul li{display: inline-block; max-width: 100px; width: 100px;}
+	.secure_links{width: 100%;text-align: center;}
+	.cart_top h1{padding: 0 10px}
+	.play_list ul li{margin: 5px 5px 0 0;}
+	.li_up_en {
+    background: url('http://7331.cdn.beyondhosting.net/srffpictures/check.jpg') no-repeat scroll left 10% transparent ;
+    padding: 10px 0px 3px 50px;
+    list-style: none outside none;
+    margin: 0px;
+    width: 100%;
+	float:left;
+}
+.ulli_bund_disc{float:left;margin-top:0px }
+.bund_disc_textarea{display:block}
+.bund_disc_textarea_left{float:none;width:100%}
+.bund_disc_textarea_right{float:none;width:100%;background: none repeat scroll 0% 0% #E4E6E9;}
+.img-resp-bund{display: block;
+	max-width: 100%;
+	height: auto;float:left}
+}
+@media (max-width: 479px) {
+	div.add_to_cart a{display: block;}
+	.h1, h1{font-size: 32px}
+	.col-lg-7.leadgen_text{background: none;}
+	.gallery > li{width: 96%;}
+	.secure_form h1{font-size: 24px;}
+	.play_list ul li{margin: 5px 3px 0 0;}
+	.bund_disc_textarea_left{}
+	.bund_disc_textarea_right{background: none repeat scroll 0% 0% #E4E6E9;}
+	.img-resp-bund{display: block;
+	max-width: 100%;
+	height: auto;
+	float:left}
+	.ulli_bund_disc{float:left; width:100%; margin-top:0px}
+}
+
+@media (max-width: 376px) {.headline h1{font-size: 26px !important;line-height: 30px!important;margin-bottom: 20px!important;font-weight:700}
+.headline{margin-bottom:0px;margin-top:-40px}
+.headlinetsl h1{font-size: 26px !important;line-height: 30px!important;margin-bottom: 20px!important;font-weight:700}
+.headlinetsl{margin-bottom:0px;}
+}
+@media (max-width: 361px) {.headline h1{font-size: 26px !important;line-height: 30px!important;margin-bottom: 20px!important;font-weight:700}
+.headline{margin-bottom:0px;margin-top:-40px}
+.headlinetsl h1{font-size: 26px !important;line-height: 30px!important;margin-bottom: 20px!important;font-weight:700}
+.headlinetsl{margin-bottom:0px;}}
+@media (max-width: 321px) {.headline h1{font-size: 26px !important;line-height: 30px!important;margin-bottom: 20px!important;font-weight:700}
+.headline{margin-bottom:0px;margin-top:-40px}
+.headlinetsl h1{font-size: 26px !important;line-height: 30px!important;margin-bottom: 20px!important;font-weight:700}
+.headlinetsl{margin-bottom:0px;}}

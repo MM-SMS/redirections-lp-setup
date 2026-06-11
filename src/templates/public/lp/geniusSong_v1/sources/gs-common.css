@@ -1,0 +1,43 @@
+@charset "utf-8";
+/* CSS Document */
+.prevent-select {
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+/*===============================*/
+.show-479, .show-tab, .show-767, .show-400, .show-340, .show-359, .show-389{display:none;}
+@media only screen and (max-width: 1000px){
+.show-tab{display:block;}
+.hide-tab{display:none;}
+}
+@media only screen and (max-width: 767px){
+.hide-767{display:none;}
+.show-767{display:block;}
+}
+@media only screen and (max-width: 479px){
+.show-479{display:block;}
+.hide-479{display:none;}
+}
+@media only screen and (max-width: 400px){
+.show-400{display:block;}
+.hide-400{display:none;}
+}
+@media only screen and (max-width: 389px){
+.show-389{display:block;}
+.hide-389{display:none;}
+}
+@media only screen and (max-width: 359px){
+.hide-359{display:none;}
+.show-359{display:block;}
+}
+
+
+
+
+
+
+
+
+
+

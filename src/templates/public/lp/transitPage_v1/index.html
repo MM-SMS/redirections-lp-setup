@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Redirecting - VettaWell</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .header {
+      background: #1a3a5c;
+      padding: 16px 24px;
+      text-align: center;
+    }
+
+    .header span {
+      color: #fff;
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 16px;
+    }
+
+    .card {
+      background: #f3f4f6;
+      border-radius: 16px;
+      padding: 32px 28px;
+      text-align: center;
+      max-width: 440px;
+      width: 100%;
+    }
+
+    .card p {
+      color: #374151;
+      font-size: 17px;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      background: #1d4ed8;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 14px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #1e40af;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      color: #9ca3af;
+      border-top: 1px solid #e5e7eb;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header">
+    <span>VettaWell</span>
+  </header>
+  <main class="main">
+    <div class="card">
+      <p id="subtitle">Please click the button below to continue if you are not automatically redirected.</p>
+      <a id="cta-btn" href="#" class="btn">CONTINUE →</a>
+    </div>
+  </main>
+  <footer>© 2024 VettaWell. All rights reserved.</footer>
+
+  <script>
+    (function () {
+      var cfg = window.__TRANSIT__ || {};
+      var url = cfg.url || "#";
+      var sub = cfg.sub || "Please click the button below to continue if you are not automatically redirected.";
+      var cta = cfg.cta || "CONTINUE →";
+      var delay = cfg.delay || 1500;
+
+      document.getElementById("subtitle").textContent = sub;
+
+      var btn = document.getElementById("cta-btn");
+      btn.textContent = cta;
+      btn.href = url;
+
+      setTimeout(function () {
+        window.location.replace(url);
+      }, delay);
+    })();
+  </script>
+</body>
+
+</html>

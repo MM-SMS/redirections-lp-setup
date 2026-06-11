@@ -1,0 +1,29 @@
+{
+  "name": "redirections-lp-setup",
+  "version": "1.0.0",
+  "description": "Scaffold the redirections landing-page system (Supabase + ClickBank + Sweeply) into any Next.js project",
+  "main": "src/setup.js",
+  "bin": {
+    "redirections-lp-setup": "bin/redirections-lp-setup.js"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
+  "scripts": {
+    "test": "node bin/redirections-lp-setup.js"
+  },
+  "keywords": [
+    "nextjs",
+    "redirect",
+    "landing-page",
+    "clickbank",
+    "supabase",
+    "scaffold"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,113 @@
+    p{font-family: main-font, Roboto, "Helvetica Neue", Arial, sans-serif;}
+    .section2 {display: none;}
+    .hidden {display: none;}
+    .hide-digital {display: none;}
+    .hide-pbs {display: none;}
+
+    .vslheadline2{font-size:34px !important;
+        font-weight:700 !important;
+        color: #fff; 
+        font-family:main-font, Roboto, "Helvetica Neue", Arial, sans-serif !important;
+        text-align:center;
+        line-height:40px !important;
+    }
+    .vslbluebackground{
+        background-color:#0067B3;
+    }
+    .vslarrow{clip-path: polygon(100% 0,0 0,50% 100%);
+        max-width: 800px;
+        margin: -1px auto;
+        background-color: #0067B3;
+        padding: 1.5rem !important;}
+    .vsltimer{
+        font-size:38px !important;
+        font-weight:700 !important;
+        color: #fff; 
+        font-family:main-font, Roboto, "Helvetica Neue", Arial, sans-serif !important;
+        text-align:center;
+    }
+
+    .background{ /*background-image: url(/img/background.png) !important;*/
+        padding-bottom: 0px;
+	    background-size: cover;
+        background-repeat: no-repeat;
+        background-position: top;
+	    padding-bottom: 25px;
+	    background-color: #f0f8ff;
+    }
+
+    .fsm {
+        padding-right: 0px !important;
+        padding-left: 0px !important;
+    }
+    .wrap {
+        margin-top: 0px !important;
+        box-shadow: none !important;
+		border:0px !important;
+    }
+    .wrap2 {
+        margin-top: 15px !important;
+    }
+    .page1 {
+        margin-top: 0px !important;
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+
+    .yellow-button-cta {
+         background: #FFD53D;         /* Yellow background */
+        color: #005cc4;              /* Brighter blue for contrast */
+        padding: 10px 20px;           /* Bigger button for larger text */
+        border-radius: 8px;
+        display: inline-block;
+        font-weight: bold;
+        font-size: 22px;              /* Even bigger text */
+        text-decoration: none;        /* No underline by default */
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    .yellow-button-cta.pulsing {
+        animation: pulse 1.2s infinite;
+    }
+    .yellow-button-cta:hover {
+        color: #005cc4;               /* Keep bright blue on hover */
+        text-decoration: none;        /* No underline on hover */
+    }
+
+    @media (max-width: 720px) {
+        .video-wrapper {
+            /*padding: 0 0.3rem;*/
+            /*margin-top: 15px !important;*/
+        }
+	    .vslheadline2 {
+            font-size: 26px !important; 
+            line-height: 30px!important; 
+        }
+        .headlinetsl h1 {
+            margin-top: 10px !important;
+        }
+		.fsm {width:100% !important}
+    }
+
+    @media (max-width: 992px){
+        .pbs{display:block !important}
+    }
+
+    @media (max-width: 480px) and (orientation: portrait){
+        .headlinetsl h1 {
+            font-size: 24px !important;
+            margin-bottom: 10px !important;
+            line-height: 24px !important;
+			font-weight:900 !important;
+        }
+    }
+
+    @media (min-width: 480px) and (orientation: portrait){
+        .headlinetsl h1 {
+            font-size: 32px !important;
+        line-height: 32px !important;
+        margin-bottom: 10px !important;
+					font-weight:800 !important;
+
+        }
+    }
