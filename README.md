@@ -78,6 +78,7 @@ redirections-lp-setup/
 │       │   │   └── redirects/
 │       │   │       └── server.ts
 │       │   └── lp/
+│       │       ├── settings.ts                     ← brand name + RouteType — edit this
 │       │       ├── config/
 │       │       │   ├── clickbankBridgeConfig.ts
 │       │       │   ├── clickbankHostedConfig.ts
@@ -125,6 +126,18 @@ The CLI will:
 4. Print a summary and remind you about required env vars and Supabase setup.
 
 Safe to re-run at any time.
+
+---
+
+## Project brand name
+
+Open `lib/lp/settings.ts` and change the `BRAND` constant to match your project's brand identifier (the value stored in the `brand` column of the `redirects` table):
+
+```ts
+export const BRAND = "your-brand-here"
+```
+
+This value is used to scope all Supabase lookups so one database can serve multiple brands.
 
 ---
 

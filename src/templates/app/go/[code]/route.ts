@@ -6,15 +6,7 @@ import { createClient as createServiceClient } from "@supabase/supabase-js"
 import { injectClickBankBridgeScript } from "@/lib/lp/config/clickbankBridgeConfig"
 import { injectClickBankHostedScript } from "@/lib/lp/config/clickbankHostedConfig"
 import { injectSweeplyHostedScript } from "@/lib/lp/config/sweeplyHostedConfig"
-
-// ─────────────────────────────────────────────
-// Типы. 
-// ─────────────────────────────────────────────
-
-type RouteType =
-  "clickbankBridge" |
-  "clickbankHosted" |
-  "sweeplyHosted"
+import { BRAND, type RouteType } from "@/lib/lp/settings"
 
 type CampaignRoute = {
   type: RouteType
@@ -32,7 +24,7 @@ type CampaignRoute = {
 // ─────────────────────────────────────────────
 
 
-async function getRouteConfig(code: string, brand: string = "rcmb"): Promise<CampaignRoute | null> {
+async function getRouteConfig(code: string, brand: string = BRAND): Promise<CampaignRoute | null> {
   try {
     const supabase = await createClient()
 
