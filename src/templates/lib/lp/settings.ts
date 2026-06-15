@@ -11,9 +11,9 @@ import { injectSweeplyHostedScript }   from "@/lib/lp/config/sweeplyHostedConfig
 // ─────────────────────────────────────────────
 
 export const ROUTE_HANDLERS: Record<string, (html: string, url: string) => string> = {
-  clickbankBridge: injectClickBankBridgeScript,
-  clickbankHosted: injectClickBankHostedScript,
-  sweeplyHosted:   injectSweeplyHostedScript,
+  clickbank_bridge: injectClickBankBridgeScript,
+  clickbank_hosted: injectClickBankHostedScript,
+  sweeply_hosted:   injectSweeplyHostedScript,
 }
 
 export type RouteType = keyof typeof ROUTE_HANDLERS
