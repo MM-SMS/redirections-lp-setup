@@ -27,9 +27,9 @@ function collectFiles(dir) {
 }
 
 // ─── main ─────────────────────────────────────────────────────────────────────
-async function setup(projectRoot) {
+async function setup(projectRoot, { force = false } = {}) {
   console.log('')
-  console.log(c.bold('redirections-lp-setup'))
+  console.log(c.bold('redirections-lp-setup') + (force ? c.yellow(' --force') : ''))
   console.log(c.dim(`Target: ${projectRoot}`))
   console.log('')
 
@@ -51,6 +51,7 @@ async function setup(projectRoot) {
   const allFiles = collectFiles(templatesDir)
 
   let created = 0
+  let updated = 0
   let skipped = 0
 
   for (const srcFile of allFiles) {
@@ -58,20 +59,29 @@ async function setup(projectRoot) {
     const dest = path.join(projectRoot, rel)
 
     if (fs.existsSync(dest)) {
-      console.log(c.dim('  ✓ exists  ') + rel)
-      skipped++
-      continue
+      if (!force) {
+        console.log(c.dim('  ✓ exists  ') + rel)
+        skipped++
+        continue
+      }
+      console.log(c.yellow('  ↺ updated ') + c.cyan(rel))
+      updated++
+    } else {
+      console.log(c.green('  + created ') + c.cyan(rel))
+      created++
     }
 
     fs.mkdirSync(path.dirname(dest), { recursive: true })
     fs.copyFileSync(srcFile, dest)
-    console.log(c.green('  + created ') + c.cyan(rel))
-    created++
   }
 
   console.log('')
   console.log(c.bold('Done.'))
-  console.log(`  ${c.green(created + ' created')}  ${c.dim(skipped + ' already existed')}`)
+  if (force) {
+    console.log(`  ${c.green(created + ' created')}  ${c.yellow(updated + ' updated')}`)
+  } else {
+    console.log(`  ${c.green(created + ' created')}  ${c.dim(skipped + ' already existed')}`)
+  }
   console.log('')
 
   printEnvReminder()

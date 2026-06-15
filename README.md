@@ -129,6 +129,29 @@ Replace `YOUR_ORG` with your GitHub organisation or username.
 
 ---
 
+## Updating the package
+
+Re-install the package and re-run setup with `--force`. That's it.
+
+```bash
+# 1. pull the latest package
+npm install git+https://github.com/YOUR_ORG/redirections-lp-setup.git
+# or SSH:
+npm install git+ssh://git@github.com:YOUR_ORG/redirections-lp-setup.git
+
+# 2. overwrite all template files in your project
+npx redirections-lp-setup --force
+```
+
+`--force` overwrites every file that came from the package. Files that don't exist yet are created normally. The summary shows how many were created vs updated.
+
+> **Note:** if you've manually edited any config file (e.g. tuned timings in `lib/lp/config/*.ts`), `--force` will overwrite those edits. Check the diff before committing:
+> ```bash
+> git diff
+> ```
+
+---
+
 ## Running the setup
 
 After installation, run the scaffold command from the **root of your Next.js project**:
