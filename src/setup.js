@@ -78,17 +78,13 @@ async function setup(projectRoot) {
 }
 
 function printEnvReminder() {
-  console.log(c.bold('Required .env.local variables:'))
+  console.log(c.bold('Required Vercel environment variables:'))
   console.log('')
-  console.log('  ' + c.cyan('NEXT_PUBLIC_SUPABASE_REDIRECT_URL') + '         Supabase project URL')
-  console.log('  ' + c.cyan('NEXT_PUBLIC_SUPABASE_REDIRECT_ANON_KEY') + '   Supabase anon/public key')
-  console.log('  ' + c.cyan('SUPABASE_REDIRECT_SERVICE_ROLE_KEY') + '        Supabase service role key (server-only)')
+  console.log('  ' + c.cyan('CAMPAIGNS_MNG_URL') + '      Base URL of the CampaignsMng API')
+  console.log('  ' + c.dim('                         e.g. https://campaignsmngprod.vercel.app'))
+  console.log('  ' + c.cyan('LINK_PUBLIC_SECRET') + '     Shared secret (x-link-secret header)')
   console.log('')
-  console.log(c.bold('Required dependency:'))
-  console.log('  npm install @supabase/supabase-js')
-  console.log('')
-  console.log(c.bold('Supabase table:'))
-  console.log(c.dim('  See README.md → "Supabase Setup" for the CREATE TABLE SQL.'))
+  console.log(c.dim('  Brand is resolved automatically from the request domain.'))
   console.log('')
 }
 

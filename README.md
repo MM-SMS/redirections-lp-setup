@@ -16,25 +16,49 @@ The system serves landing pages from your Next.js project and injects a small sc
 | `clickbankHosted` | Shows the landing page and silently preloads the ClickBank checkout in a hidden iframe |
 | `sweeplyHosted` | Shows the landing page and rewrites the CTA button `href` with the affiliate URL |
 
-Traffic hits `/go/[code]` (e.g. `/go/t7z`). The route handler looks up the `code` in Supabase, reads the matching HTML file from `public/lp/`, injects the right script, and returns the page. It also increments a click counter in Supabase asynchronously.
+Traffic hits `/go/[code]` (e.g. `/go/pc3xxdxx`). The route handler:
+
+1. Detects the brand automatically from the request domain (e.g. `burnsong.org` → `brns`).
+2. Calls the **CampaignsMng public API** (`/api/public/resolve`) to look up the campaign.
+3. Reads the matching HTML file from `public/lp/`, injects the right script, and returns the page.
+4. Fires a click event to CampaignsMng (`/api/public/click`) in the background — never blocks the response.
+
+The brand site never touches the database directly.
+
+---
+
+## Brand detection
+
+Brand code is resolved automatically from the deployment domain — no per-project config needed.
+
+| Domain | Brand code |
+|---|---|
+| `vettawell.com` | `vttw` |
+| `silvermoonandastar.com` | `slvr` |
+| `onyxsoundlab.com` | `onyx` |
+| `sunmasterusa.com` | `snms` |
+| `richmondbalance.com` | `rcmb` |
+| `discrevolt.net` | `dscv` |
+| `sdamg.com` | `sdmg` |
+| `healthyrations.com` | `hltr` |
+| `top10.care` | `ttcr` |
+| `burnsong.org` | `brns` |
+
+To add a new brand, add a row to `DOMAIN_BRAND_MAP` in `lib/lp/settings.ts`.
 
 ---
 
 ## Folder structure installed into your project
-
-The package mirrors this exact structure into your project root:
 
 ```
 your-nextjs-project/
 ├── app/
 │   └── go/
 │       └── [code]/
-│           └── route.ts                        ← Next.js API route (main handler)
+│           └── route.ts                        ← Next.js route handler (main entry point)
 ├── lib/
-│   ├── supabase/
-│   │   └── redirects/
-│   │       └── server.ts                       ← Supabase client factory
 │   └── lp/
+│       ├── settings.ts                         ← Domain→brand map + RouteType
 │       ├── config/
 │       │   ├── clickbankBridgeConfig.ts         ← Bridge script injector
 │       │   ├── clickbankHostedConfig.ts         ← Hosted iframe injector
@@ -60,8 +84,6 @@ Each landing page folder contains an `index.html` and a `sources/` folder with a
 
 ## Package structure (inside this repo)
 
-The `src/templates/` folder mirrors the project structure exactly — what you see there is what gets copied into the target project:
-
 ```
 redirections-lp-setup/
 ├── bin/
@@ -74,11 +96,8 @@ redirections-lp-setup/
 │       │       └── [code]/
 │       │           └── route.ts
 │       ├── lib/
-│       │   ├── supabase/
-│       │   │   └── redirects/
-│       │   │       └── server.ts
 │       │   └── lp/
-│       │       ├── settings.ts                     ← brand name + RouteType — edit this
+│       │       ├── settings.ts
 │       │       ├── config/
 │       │       │   ├── clickbankBridgeConfig.ts
 │       │       │   ├── clickbankHostedConfig.ts
@@ -106,7 +125,7 @@ npm install git+https://github.com/YOUR_ORG/redirections-lp-setup.git
 npm install git+ssh://git@github.com:YOUR_ORG/redirections-lp-setup.git
 ```
 
-Replace `YOUR_ORG` with your GitHub organisation or username and `redirections-lp-setup` with the actual repo name.
+Replace `YOUR_ORG` with your GitHub organisation or username.
 
 ---
 
@@ -123,86 +142,46 @@ The CLI will:
 1. Check for `next.config.js/ts/mjs` (warns if not found).
 2. Walk every file inside `src/templates/` and copy it to the same relative path in your project.
 3. Skip any file that already exists — **never overwrites**.
-4. Print a summary and remind you about required env vars and Supabase setup.
+4. Print a summary and remind you about required env vars.
 
 Safe to re-run at any time.
 
 ---
 
-## Project brand name
-
-Open `lib/lp/settings.ts` and change the `BRAND` constant to match your project's brand identifier (the value stored in the `brand` column of the `redirects` table):
-
-```ts
-export const BRAND = "your-brand-here"
-```
-
-This value is used to scope all Supabase lookups so one database can serve multiple brands.
-
----
-
 ## What you need after setup
 
-### 1. npm dependency
+### Environment variables
 
-```bash
-npm install @supabase/supabase-js
-```
-
-### 2. Environment variables
-
-Add to `.env.local`:
+Set these in **Vercel** (Project Settings → Environment Variables). No `.env.local` needed on brand sites — these come from Vercel.
 
 ```env
-# Supabase → Project Settings → API
-NEXT_PUBLIC_SUPABASE_REDIRECT_URL=https://xxxxxxxxxxxx.supabase.co
+# Base URL of the CampaignsMng API
+CAMPAIGNS_MNG_URL=https://campaignsmngprod.vercel.app
 
-# Anon / public key (safe to expose to the browser)
-NEXT_PUBLIC_SUPABASE_REDIRECT_ANON_KEY=eyJ...
-
-# Service role key — server-side only, never expose to the browser
-SUPABASE_REDIRECT_SERVICE_ROLE_KEY=eyJ...
+# Shared secret — must match LINK_PUBLIC_SECRET set on CampaignsMng
+LINK_PUBLIC_SECRET=your-shared-secret-here
 ```
 
-### 3. Supabase table
+No extra npm packages are required.
 
-Run this SQL in your Supabase project (SQL Editor):
+### `/not-found` and `/expired` pages
 
-```sql
-CREATE TABLE redirects (
-  id                uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
-  code              text        NOT NULL,
-  brand             text        NOT NULL DEFAULT 'rcmb',
-  route_type        text        NOT NULL,   -- 'clickbankBridge' | 'clickbankHosted' | 'sweeplyHosted'
-  offer_id          text        NOT NULL,
-  affiliate_url     text,
-  landing_page      text,                   -- must match a folder name inside public/lp/
-  is_active         boolean     NOT NULL DEFAULT true,
-  click_count       integer     NOT NULL DEFAULT 0,
-  last_clicked_at   timestamptz,
-  created_at        timestamptz NOT NULL DEFAULT now(),
-  updated_at        timestamptz NOT NULL DEFAULT now(),
-  UNIQUE (code, brand)
-);
+Unknown codes redirect to `/not-found`; inactive/reverted codes redirect to `/expired`. Create pages at:
+
 ```
-
-### 4. `/expired` page
-
-Unknown or inactive codes redirect to `/expired`. Create a page at `app/expired/page.tsx` (or `page.jsx`) in your Next.js project.
+app/not-found/page.tsx
+app/expired/page.tsx
+```
 
 ---
 
 ## Adding a new campaign
 
 1. Add the landing page folder to `public/lp/yourOffer_v1/` (with `index.html` + `sources/`).
-2. Insert a row in the `redirects` table:
+2. Create the campaign in **CampaignsMng** with the matching `prelander_id` set to `yourOffer_v1`.
+3. Visit `/go/<paf>` in the browser to test.
 
-```sql
-INSERT INTO redirects (code, brand, route_type, offer_id, affiliate_url, landing_page, is_active)
-VALUES ('abc123', 'rcmb', 'clickbankBridge', 'yourOffer', 'https://hop.clickbank.net/...', 'yourOffer_v1', true);
-```
-
-3. Visit `/go/abc123` in the browser to test.
+No SQL or database access needed from the brand site.
 
 ---
 

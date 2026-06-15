@@ -1,102 +1,86 @@
 import { NextRequest, NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
-import { createClient } from "@/lib/supabase/redirects/server"
-import { createClient as createServiceClient } from "@supabase/supabase-js"
 import { injectClickBankBridgeScript } from "@/lib/lp/config/clickbankBridgeConfig"
 import { injectClickBankHostedScript } from "@/lib/lp/config/clickbankHostedConfig"
 import { injectSweeplyHostedScript } from "@/lib/lp/config/sweeplyHostedConfig"
-import { BRAND, type RouteType } from "@/lib/lp/settings"
+import { getBrand, type RouteType } from "@/lib/lp/settings"
 
 type CampaignRoute = {
   type: RouteType
-  offer: string
-  is_active: boolean
-  sales_page?: string
-  landing_page?: string
-  redirect_url?: string
-  external_url?: string
-  preload_url?: string
+  landing_page: string | null
+  affiliate_url: string | null
 }
 
 // ─────────────────────────────────────────────
-// Supabase lookup
+// Campaigns API helpers
 // ─────────────────────────────────────────────
 
+function apiBase(): string {
+  const url = process.env.CAMPAIGNS_MNG_URL
+  if (!url) throw new Error("CAMPAIGNS_MNG_URL is not set")
+  return url.replace(/\/$/, "")
+}
 
-async function getRouteConfig(code: string, brand: string = BRAND): Promise<CampaignRoute | null> {
-  try {
-    const supabase = await createClient()
+function linkSecret(): string {
+  const s = process.env.LINK_PUBLIC_SECRET
+  if (!s) throw new Error("LINK_PUBLIC_SECRET is not set")
+  return s
+}
 
-    // New schema: route_type, offer_id, affiliate_url, is_active
-    // Don't filter by is_active here - we check it in the handler to show expired page
-    const { data, error } = await supabase
-      .from("redirects")
-      .select("*")
-      .eq("code", code)
-      .eq("brand", brand)
-      .single()
+async function resolveLink(
+  paf: string,
+  brand: string,
+): Promise<{ found: boolean; active: boolean; route?: CampaignRoute }> {
+  const res = await fetch(
+    `${apiBase()}/api/public/resolve?brand=${encodeURIComponent(brand)}&paf=${encodeURIComponent(paf)}`,
+    { headers: { "x-link-secret": linkSecret() }, cache: "no-store" }
+  )
 
-    if (error || !data) {
-      console.log(`[v0] Supabase lookup failed for ${code}: ${error?.message}`)
-      return null
-    }
+  if (res.status === 401) throw new Error("Invalid LINK_PUBLIC_SECRET")
+  if (!res.ok) throw new Error(`Resolve API error: ${res.status}`)
 
-    console.log(`[v0] Found redirect: code=${code}, is_active=${data.is_active}, route_type=${data.route_type}`)
+  const data = await res.json()
 
-      // Update click count using service_role key (bypasses RLS)
-      ; (async () => {
-        const serviceRoleKey = process.env.SUPABASE_REDIRECT_SERVICE_ROLE_KEY
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_REDIRECT_URL
+  if (!data.found || !data.active) return { found: data.found, active: data.active }
 
-        if (!serviceRoleKey || !supabaseUrl) {
-          console.error("[v0] Missing SUPABASE_REDIRECT_SERVICE_ROLE_KEY or SUPABASE_REDIRECT_URL for click tracking")
-          return
-        }
-
-        const adminClient = createServiceClient(supabaseUrl, serviceRoleKey)
-
-        const { error } = await adminClient
-          .from("redirects")
-          .update({
-            click_count: (data.click_count || 0) + 1,
-            last_clicked_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          })
-          .eq("id", data.id)
-
-        if (error) {
-          console.error("[v0] Failed to update click_count:", error)
-        } else {
-          console.log("[v0] Click count updated for code:", code)
-        }
-      })()
-
-    // Map new schema to CampaignRoute format
-    // New columns: route_type, offer_id, affiliate_url, landing_page
-    return {
-      type: data.route_type,
-      offer: data.offer_id,
-      is_active: data.is_active,
-      sales_page: data.landing_page,
-      landing_page: data.landing_page,
-      redirect_url: data.affiliate_url,
-      external_url: data.affiliate_url,
-      preload_url: data.affiliate_url,
-    }
-  } catch (error) {
-    console.error("[v0] Supabase error:", error)
-    return null
+  return {
+    found: true,
+    active: true,
+    route: {
+      type: data.routing_type as RouteType,
+      landing_page: data.prelander_id ?? null,
+      affiliate_url: data.affiliate_url ?? null,
+    },
   }
 }
 
+function trackClick(paf: string, brand: string, request: NextRequest): void {
+  const headers: Record<string, string> = {
+    "x-link-secret": linkSecret(),
+    "Content-Type": "application/json",
+  }
+  const fwd = request.headers.get("x-forwarded-for")
+  const ua  = request.headers.get("user-agent")
+  const ref = request.headers.get("referer")
+  if (fwd) headers["x-forwarded-for"] = fwd
+  if (ua)  headers["user-agent"]       = ua
+  if (ref) headers["referer"]          = ref
+
+  fetch(`${apiBase()}/api/public/click`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ brand, paf }),
+  }).catch(err => console.error("[go] click track failed:", err))
+}
+
 // ─────────────────────────────────────────────
-// Утилиты
+// Utilities
 // ─────────────────────────────────────────────
 
-function readLandingHtml(salesPage: string): string | null {
+function readLandingHtml(prelander: string): string | null {
   try {
-    const filePath = path.join(process.cwd(), "public", "lp", salesPage, "index.html")
+    const filePath = path.join(process.cwd(), "public", "lp", prelander, "index.html")
     return fs.readFileSync(filePath, "utf-8")
   } catch {
     return null
@@ -106,10 +90,7 @@ function readLandingHtml(salesPage: string): string | null {
 function html200(body: string): NextResponse {
   return new NextResponse(body, {
     status: 200,
-    headers: {
-      "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "no-store, no-cache",
-    },
+    headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store, no-cache" },
   })
 }
 
@@ -123,55 +104,53 @@ export async function GET(
 ) {
   const { code } = await params
 
-  // Get route from Supabase
-  const route = await getRouteConfig(code)
-
-  if (!route || !route.is_active) {
-    return NextResponse.redirect(new URL("/expired", request.url))
+  let brand: string
+  try {
+    brand = getBrand(request.headers.get("host") ?? "")
+  } catch (err) {
+    console.error("[go] unknown domain:", err)
+    return new NextResponse("Unknown brand", { status: 404 })
   }
 
+  let resolved: { found: boolean; active: boolean; route?: CampaignRoute }
+  try {
+    resolved = await resolveLink(code, brand)
+  } catch (err) {
+    console.error("[go] resolve error:", err)
+    return new NextResponse("Internal error", { status: 500 })
+  }
+
+  if (!resolved.found)   return NextResponse.redirect(new URL("/not-found", request.url))
+  if (!resolved.active)  return NextResponse.redirect(new URL("/expired", request.url))
+
+  const route = resolved.route!
+  trackClick(code, brand, request)
+
+  const { affiliate_url, landing_page } = route
+
   switch (route.type) {
-
     case "clickbankBridge": {
-      const redirectUrl = route.redirect_url || route.external_url
-      const salesPage = route.sales_page
-
-      if (!redirectUrl || !salesPage) {
-        return new NextResponse("Misconfigured: missing redirect_url or sales_page", { status: 500 })
-      }
-      const raw = readLandingHtml(salesPage)
-      if (!raw) {
-        return new NextResponse(`Landing not found: ${salesPage}`, { status: 500 })
-      }
-      return html200(injectClickBankBridgeScript(raw, redirectUrl))
+      if (!affiliate_url || !landing_page)
+        return new NextResponse("Misconfigured: missing affiliate_url or prelander_id", { status: 500 })
+      const raw = readLandingHtml(landing_page)
+      if (!raw) return new NextResponse(`Landing not found: ${landing_page}`, { status: 500 })
+      return html200(injectClickBankBridgeScript(raw, affiliate_url))
     }
 
     case "clickbankHosted": {
-      const preloadUrl = route.preload_url || route.external_url
-      const salesPage = route.sales_page
-
-      if (!preloadUrl || !salesPage) {
-        return new NextResponse("Misconfigured: missing preload_url or sales_page", { status: 500 })
-      }
-      const raw = readLandingHtml(salesPage)
-      if (!raw) {
-        return new NextResponse(`Landing not found: ${salesPage}`, { status: 500 })
-      }
-      return html200(injectClickBankHostedScript(raw, preloadUrl))
+      if (!affiliate_url || !landing_page)
+        return new NextResponse("Misconfigured: missing affiliate_url or prelander_id", { status: 500 })
+      const raw = readLandingHtml(landing_page)
+      if (!raw) return new NextResponse(`Landing not found: ${landing_page}`, { status: 500 })
+      return html200(injectClickBankHostedScript(raw, affiliate_url))
     }
 
     case "sweeplyHosted": {
-      const affiliateUrl = route.redirect_url || route.external_url
-      const salesPage = route.sales_page
-
-      if (!affiliateUrl || !salesPage) {
-        return new NextResponse("Misconfigured: missing affiliate_url or sales_page", { status: 500 })
-      }
-      const raw = readLandingHtml(salesPage)
-      if (!raw) {
-        return new NextResponse(`Landing not found: ${salesPage}`, { status: 500 })
-      }
-      return html200(injectSweeplyHostedScript(raw, affiliateUrl))
+      if (!affiliate_url || !landing_page)
+        return new NextResponse("Misconfigured: missing affiliate_url or prelander_id", { status: 500 })
+      const raw = readLandingHtml(landing_page)
+      if (!raw) return new NextResponse(`Landing not found: ${landing_page}`, { status: 500 })
+      return html200(injectSweeplyHostedScript(raw, affiliate_url))
     }
 
     default:
