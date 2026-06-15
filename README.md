@@ -20,7 +20,7 @@ Traffic hits `/go/[code]` (e.g. `/go/pc3xxdxx`). The route handler:
 
 1. Detects the brand automatically from the request domain (e.g. `burnsong.org` → `brns`).
 2. Calls the **CampaignsMng public API** (`/api/public/resolve`) to look up the campaign.
-3. Reads the matching HTML file from `public/lp/`, injects the right script, and returns the page.
+3. Reads the matching HTML file from `public/lp/`, looks up the inject function for the route type, and returns the page.
 4. Fires a click event to CampaignsMng (`/api/public/click`) in the background — never blocks the response.
 
 The brand site never touches the database directly.
@@ -44,7 +44,34 @@ Brand code is resolved automatically from the deployment domain — no per-proje
 | `top10.care` | `ttcr` |
 | `burnsong.org` | `brns` |
 
-To add a new brand, add a row to `DOMAIN_BRAND_MAP` in `lib/lp/settings.ts`.
+To add a new brand, add one row to `DOMAIN_BRAND_MAP` in `lib/lp/settings.ts`.
+
+---
+
+## Adding a new route type
+
+Route types are registered in `lib/lp/settings.ts` — `route.ts` never needs to be touched.
+
+**Steps:**
+
+1. Create `lib/lp/config/yourTypeConfig.ts` and export an inject function with this exact signature:
+   ```ts
+   export function injectYourType(html: string, url: string): string {
+     // modify html, return it
+   }
+   ```
+2. Open `lib/lp/settings.ts`, import the function and add one entry to `ROUTE_HANDLERS`:
+   ```ts
+   import { injectYourType } from "@/lib/lp/config/yourTypeConfig"
+
+   export const ROUTE_HANDLERS = {
+     clickbankBridge: injectClickBankBridgeScript,
+     clickbankHosted: injectClickBankHostedScript,
+     sweeplyHosted:   injectSweeplyHostedScript,
+     yourType:        injectYourType,            // ← add this
+   }
+   ```
+3. That's it. The `RouteType` union and the dispatch in `route.ts` update automatically.
 
 ---
 
@@ -55,16 +82,14 @@ your-nextjs-project/
 ├── app/
 │   └── go/
 │       └── [code]/
-│           └── route.ts                        ← Next.js route handler (main entry point)
+│           └── route.ts                        ← Next.js route handler (never edit this)
 ├── lib/
 │   └── lp/
-│       ├── settings.ts                         ← Domain→brand map + RouteType
-│       ├── config/
-│       │   ├── clickbankBridgeConfig.ts         ← Bridge script injector
-│       │   ├── clickbankHostedConfig.ts         ← Hosted iframe injector
-│       │   └── sweeplyHostedConfig.ts           ← Sweeply CTA injector
-│       └── routes/
-│           └── routes.json                     ← Reference config example
+│       ├── settings.ts                         ← registry: brands + route handlers
+│       └── config/
+│           ├── clickbankBridgeConfig.ts         ← Bridge script injector
+│           ├── clickbankHostedConfig.ts         ← Hosted iframe injector
+│           └── sweeplyHostedConfig.ts           ← Sweeply CTA injector
 └── public/
     └── lp/
         ├── aquaTower_v1/
@@ -79,6 +104,8 @@ your-nextjs-project/
 ```
 
 Each landing page folder contains an `index.html` and a `sources/` folder with all assets (images, CSS, JS).
+
+A `.redirections-lp-manifest.json` file is also written to the project root after each run — the setup tool uses it to track which files it owns (for cleanup on `--force`).
 
 ---
 
@@ -98,12 +125,10 @@ redirections-lp-setup/
 │       ├── lib/
 │       │   └── lp/
 │       │       ├── settings.ts
-│       │       ├── config/
-│       │       │   ├── clickbankBridgeConfig.ts
-│       │       │   ├── clickbankHostedConfig.ts
-│       │       │   └── sweeplyHostedConfig.ts
-│       │       └── routes/
-│       │           └── routes.json
+│       │       └── config/
+│       │           ├── clickbankBridgeConfig.ts
+│       │           ├── clickbankHostedConfig.ts
+│       │           └── sweeplyHostedConfig.ts
 │       └── public/
 │           └── lp/
 │               └── (all landing page folders)
@@ -129,29 +154,6 @@ Replace `YOUR_ORG` with your GitHub organisation or username.
 
 ---
 
-## Updating the package
-
-Re-install the package and re-run setup with `--force`. That's it.
-
-```bash
-# 1. pull the latest package
-npm install git+https://github.com/YOUR_ORG/redirections-lp-setup.git
-# or SSH:
-npm install git+ssh://git@github.com:YOUR_ORG/redirections-lp-setup.git
-
-# 2. overwrite all template files in your project
-npx redirections-lp-setup --force
-```
-
-`--force` overwrites every file that came from the package. Files that don't exist yet are created normally. The summary shows how many were created vs updated.
-
-> **Note:** if you've manually edited any config file (e.g. tuned timings in `lib/lp/config/*.ts`), `--force` will overwrite those edits. Check the diff before committing:
-> ```bash
-> git diff
-> ```
-
----
-
 ## Running the setup
 
 After installation, run the scaffold command from the **root of your Next.js project**:
@@ -165,9 +167,36 @@ The CLI will:
 1. Check for `next.config.js/ts/mjs` (warns if not found).
 2. Walk every file inside `src/templates/` and copy it to the same relative path in your project.
 3. Skip any file that already exists — **never overwrites**.
-4. Print a summary and remind you about required env vars.
+4. Write `.redirections-lp-manifest.json` to track installed files.
+5. Print a summary and remind you about required env vars.
 
 Safe to re-run at any time.
+
+---
+
+## Updating the package
+
+Re-install the package and re-run setup with `--force`. That's it.
+
+```bash
+# 1. pull the latest package
+npm install git+https://github.com/YOUR_ORG/redirections-lp-setup.git
+# or SSH:
+npm install git+ssh://git@github.com:YOUR_ORG/redirections-lp-setup.git
+
+# 2. overwrite all template files and clean up anything removed
+npx redirections-lp-setup --force
+```
+
+`--force` does three things:
+
+- **Overwrites** every file that came from the package (shown as `↺ updated`)
+- **Creates** any new files that didn't exist yet (shown as `+ created`)
+- **Removes** any files that were installed by a previous version but no longer exist in the current templates (shown as `- removed`), and cleans up empty directories left behind
+
+The summary line shows the counts for all three. After running, do a `git diff` to review everything before committing.
+
+> **Note:** if you've manually edited a config file (e.g. tuned timings in `lib/lp/config/*.ts`), `--force` will overwrite those edits. The `git diff` step is your safety net.
 
 ---
 
@@ -175,7 +204,7 @@ Safe to re-run at any time.
 
 ### Environment variables
 
-Set these in **Vercel** (Project Settings → Environment Variables). No `.env.local` needed on brand sites — these come from Vercel.
+Set these in **Vercel** (Project Settings → Environment Variables).
 
 ```env
 # Base URL of the CampaignsMng API

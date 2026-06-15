@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
-import { injectClickBankBridgeScript } from "@/lib/lp/config/clickbankBridgeConfig"
-import { injectClickBankHostedScript } from "@/lib/lp/config/clickbankHostedConfig"
-import { injectSweeplyHostedScript } from "@/lib/lp/config/sweeplyHostedConfig"
-import { getBrand, type RouteType } from "@/lib/lp/settings"
+import { getBrand, ROUTE_HANDLERS } from "@/lib/lp/settings"
 
 type CampaignRoute = {
-  type: RouteType
+  type: string
   landing_page: string | null
   affiliate_url: string | null
 }
@@ -48,8 +45,8 @@ async function resolveLink(
     found: true,
     active: true,
     route: {
-      type: data.routing_type as RouteType,
-      landing_page: data.prelander_id ?? null,
+      type:         data.routing_type,
+      landing_page: data.prelander_id  ?? null,
       affiliate_url: data.affiliate_url ?? null,
     },
   }
@@ -120,40 +117,20 @@ export async function GET(
     return new NextResponse("Internal error", { status: 500 })
   }
 
-  if (!resolved.found)   return NextResponse.redirect(new URL("/not-found", request.url))
-  if (!resolved.active)  return NextResponse.redirect(new URL("/expired", request.url))
+  if (!resolved.found)  return NextResponse.redirect(new URL("/not-found", request.url))
+  if (!resolved.active) return NextResponse.redirect(new URL("/expired",   request.url))
 
-  const route = resolved.route!
+  const { type, affiliate_url, landing_page } = resolved.route!
   trackClick(code, brand, request)
 
-  const { affiliate_url, landing_page } = route
+  const handler = ROUTE_HANDLERS[type]
+  if (!handler)
+    return new NextResponse(`Unknown route type: ${type}`, { status: 400 })
+  if (!affiliate_url || !landing_page)
+    return new NextResponse("Misconfigured: missing affiliate_url or prelander_id", { status: 500 })
 
-  switch (route.type) {
-    case "clickbankBridge": {
-      if (!affiliate_url || !landing_page)
-        return new NextResponse("Misconfigured: missing affiliate_url or prelander_id", { status: 500 })
-      const raw = readLandingHtml(landing_page)
-      if (!raw) return new NextResponse(`Landing not found: ${landing_page}`, { status: 500 })
-      return html200(injectClickBankBridgeScript(raw, affiliate_url))
-    }
+  const raw = readLandingHtml(landing_page)
+  if (!raw) return new NextResponse(`Landing not found: ${landing_page}`, { status: 500 })
 
-    case "clickbankHosted": {
-      if (!affiliate_url || !landing_page)
-        return new NextResponse("Misconfigured: missing affiliate_url or prelander_id", { status: 500 })
-      const raw = readLandingHtml(landing_page)
-      if (!raw) return new NextResponse(`Landing not found: ${landing_page}`, { status: 500 })
-      return html200(injectClickBankHostedScript(raw, affiliate_url))
-    }
-
-    case "sweeplyHosted": {
-      if (!affiliate_url || !landing_page)
-        return new NextResponse("Misconfigured: missing affiliate_url or prelander_id", { status: 500 })
-      const raw = readLandingHtml(landing_page)
-      if (!raw) return new NextResponse(`Landing not found: ${landing_page}`, { status: 500 })
-      return html200(injectSweeplyHostedScript(raw, affiliate_url))
-    }
-
-    default:
-      return new NextResponse("Unknown route type", { status: 400 })
-  }
+  return html200(handler(raw, affiliate_url))
 }
