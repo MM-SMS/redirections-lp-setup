@@ -1,7 +1,8 @@
 // ─────────────────────────────────────────────
 // Default redirect page
 // Used when a campaign resolves with an affiliate_url but no prelander_id
-// (nothing to render from public/lp/). Mimics a native browser confirm dialog.
+// (nothing to render from public/lp/). Tells the visitor the offer they
+// followed is gone and counts down to the affiliate URL.
 // Adjust DEFAULT_REDIRECT_SETTINGS to change the delay.
 // ─────────────────────────────────────────────
 
@@ -17,38 +18,67 @@ export function renderDefaultRedirectPage(affiliateUrl: string): string {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Redirecting…</title>
+<title>Offer expired</title>
 <style>
   html, body {
-    margin: 0; height: 100%;
+    margin: 0; min-height: 100%;
     display: flex; align-items: center; justify-content: center;
-    background: #202124;
+    background: #eef1f8;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    padding: 24px;
   }
   .dialog {
-    background: #fff; border-radius: 8px;
-    box-shadow: 0 4px 23px 0 rgba(0,0,0,.2);
-    padding: 24px 28px; max-width: 360px; width: 90%;
+    background: #fff; border-radius: 16px;
+    box-shadow: 0 10px 40px 0 rgba(20,30,60,.12);
+    padding: 36px 32px; max-width: 380px; width: 100%;
     text-align: center;
   }
-  .dialog p { margin: 0 0 20px; font-size: 15px; color: #202124; line-height: 1.4; }
-  .timer { font-weight: 600; }
-  .actions { display: flex; gap: 10px; justify-content: center; }
-  button {
-    font-size: 14px; padding: 8px 18px; border-radius: 4px;
-    border: 1px solid #dadce0; background: #f8f9fa; cursor: pointer;
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #ffe9e0; color: #e8542a;
+    font-size: 12px; font-weight: 600;
+    padding: 6px 14px; border-radius: 999px;
+    margin-bottom: 20px;
   }
-  button.primary { background: #1a73e8; color: #fff; border-color: #1a73e8; }
-  button:hover { opacity: .9; }
+  .badge::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: #e8542a; display: inline-block;
+  }
+  h1 { margin: 0 0 12px; font-size: 24px; font-weight: 700; color: #16213e; }
+  .subtext { margin: 0 0 28px; font-size: 14px; line-height: 1.5; color: #6b7280; }
+  .ring {
+    width: 120px; height: 120px; margin: 0 auto 28px;
+    border-radius: 50%; border: 2px solid #e3e7f0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .ring .count { font-size: 32px; font-weight: 700; color: #16213e; line-height: 1; }
+  .ring .label { font-size: 11px; font-weight: 600; letter-spacing: .06em; color: #9aa3b5; margin-top: 4px; }
+  .cta {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; border: none; border-radius: 10px;
+    background: #ee5e3f; color: #fff;
+    font-size: 15px; font-weight: 700;
+    padding: 15px 20px; cursor: pointer;
+    box-shadow: 0 8px 20px rgba(238,94,63,.35);
+  }
+  .cta:hover { background: #e34d2c; }
+  hr { border: none; border-top: 1px solid #edf0f6; margin: 24px 0 16px; }
+  .cancel-line { font-size: 13px; color: #9aa3b5; }
+  .cancel-line a { color: #16213e; font-weight: 600; text-decoration: underline; cursor: pointer; }
 </style>
 </head>
 <body>
   <div class="dialog">
-    <p>You will be redirected to another page in <span class="timer" id="timer">${seconds}</span>s</p>
-    <div class="actions">
-      <button id="cancelBtn">Cancel</button>
-      <button id="redirectBtn" class="primary">Redirect</button>
+    <span class="badge">Offer expired</span>
+    <h1>This deal just ended</h1>
+    <p class="subtext">The promo you came for is no longer live.<br>We're sending you straight to our latest offer.</p>
+    <div class="ring">
+      <span class="count" id="timer">${seconds}</span>
+      <span class="label">SECONDS</span>
     </div>
+    <button id="redirectBtn" class="cta">See the new offer &rarr;</button>
+    <hr>
+    <p class="cancel-line">Don't want to be redirected automatically? <a id="cancelBtn">Cancel redirect</a></p>
   </div>
   <script>
   (function() {
