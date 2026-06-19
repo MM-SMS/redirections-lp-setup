@@ -238,3 +238,6 @@ Shows the LP and preloads the ClickBank checkout in a hidden `1×1` iframe `2000
 
 ### `sweeply_hosted`
 Shows the LP and injects the affiliate URL into `#checkout_cta` and all `a.button-main` links. Edit `lib/lp/config/sweeplyHostedConfig.ts` to target different selectors.
+
+### Fallback: no `prelander_id`
+If a campaign resolves with an `affiliate_url` but no `prelander_id` (nothing to render from `public/lp/`), the route type is ignored and a generic confirm-dialog-style page is shown instead — "You will be redirected in 5s" with **Redirect** / **Cancel** buttons, auto-redirecting on timeout. Adjust `DEFAULT_REDIRECT_SETTINGS` in `lib/lp/config/defaultRedirectPage.ts`. A campaign still missing `affiliate_url` is a hard misconfiguration and returns a `500`.

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
 import { ROUTE_HANDLERS } from "@/lib/lp/settings"
+import { renderDefaultRedirectPage } from "@/lib/lp/config/defaultRedirectPage"
 
 type CampaignRoute = {
   type: string
@@ -114,11 +115,15 @@ export async function GET(
   const { type, affiliate_url, landing_page } = resolved.route!
   trackClick(code, request)
 
+  if (!affiliate_url)
+    return new NextResponse("Misconfigured: missing affiliate_url", { status: 500 })
+
+  if (!landing_page)
+    return html200(renderDefaultRedirectPage(affiliate_url))
+
   const handler = ROUTE_HANDLERS[type]
   if (!handler)
     return new NextResponse(`Unknown route type: ${type}`, { status: 400 })
-  if (!affiliate_url || !landing_page)
-    return new NextResponse("Misconfigured: missing affiliate_url or prelander_id", { status: 500 })
 
   const raw = readLandingHtml(landing_page)
   if (!raw) return new NextResponse(`Landing not found: ${landing_page}`, { status: 500 })
