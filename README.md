@@ -12,39 +12,29 @@ The system serves landing pages from your Next.js project and injects a small sc
 
 | Route type | What it does |
 |---|---|
-| `clickbankBridge` | Shows the landing page, then after a short delay redirects the user to the ClickBank sales page via `window.location.replace` |
-| `clickbankHosted` | Shows the landing page and silently preloads the ClickBank checkout in a hidden iframe |
-| `sweeplyHosted` | Shows the landing page and rewrites the CTA button `href` with the affiliate URL |
+| `clickbank_bridge` | Shows the landing page, then after a short delay redirects the user to the ClickBank sales page via `window.location.replace` |
+| `clickbank_hosted` | Shows the landing page and silently preloads the ClickBank checkout in a hidden iframe |
+| `sweeply_hosted` | Shows the landing page and rewrites the CTA button `href` with the affiliate URL |
 
 Traffic hits `/go/[code]` (e.g. `/go/pc3xxdxx`). The route handler:
 
-1. Detects the brand automatically from the request domain (e.g. `burnsong.org` → `brns`).
-2. Calls the **CampaignsMng public API** (`/api/public/resolve`) to look up the campaign.
-3. Reads the matching HTML file from `public/lp/`, looks up the inject function for the route type, and returns the page.
-4. Fires a click event to CampaignsMng (`/api/public/click`) in the background — never blocks the response.
+1. Calls the **CampaignsMng public API** (`/api/public/resolve`) to look up the campaign, authenticating with this brand's own token.
+2. Reads the matching HTML file from `public/lp/`, looks up the inject function for the route type, and returns the page.
+3. Fires a click event to CampaignsMng (`/api/public/click`) in the background — never blocks the response.
 
 The brand site never touches the database directly.
 
 ---
 
-## Brand detection
+## Auth model
 
-Brand code is resolved automatically from the deployment domain — no per-project config needed.
+Each brand has **its own token** (`CAMPAIGNS_BRAND_TOKEN`), generated on that brand's page in CampaignsMng (owner only). The token identifies the brand server-side, so requests only ever send `paf` — never a brand code.
 
-| Domain | Brand code |
-|---|---|
-| `vettawell.com` | `vttw` |
-| `silvermoonandastar.com` | `slvr` |
-| `onyxsoundlab.com` | `onyx` |
-| `sunmasterusa.com` | `snms` |
-| `richmondbalance.com` | `rcmb` |
-| `discrevolt.net` | `dscv` |
-| `sdamg.com` | `sdmg` |
-| `healthyrations.com` | `hltr` |
-| `top10.care` | `ttcr` |
-| `burnsong.org` | `brns` |
+This means:
 
-To add a new brand, add one row to `DOMAIN_BRAND_MAP` in `lib/lp/settings.ts`.
+- **One token per brand deployment.** Don't reuse the same token across multiple brand sites — each Vercel project needs its own value, copied from that brand's page in CampaignsMng.
+- A token only ever reads its own brand's links. There's no `brand` query param or body field anymore.
+- Regenerating a token on the brand page invalidates the old one immediately — update `CAMPAIGNS_BRAND_TOKEN` in Vercel right after regenerating, or the deployment starts getting `401`s.
 
 ---
 
@@ -60,15 +50,15 @@ Route types are registered in `lib/lp/settings.ts` — `route.ts` never needs to
      // modify html, return it
    }
    ```
-2. Open `lib/lp/settings.ts`, import the function and add one entry to `ROUTE_HANDLERS`:
+2. Open `lib/lp/settings.ts`, import the function and add one entry to `ROUTE_HANDLERS`. The key must exactly match the `routing_type_id` value CampaignsMng will send for this type:
    ```ts
    import { injectYourType } from "@/lib/lp/config/yourTypeConfig"
 
    export const ROUTE_HANDLERS = {
-     clickbankBridge: injectClickBankBridgeScript,
-     clickbankHosted: injectClickBankHostedScript,
-     sweeplyHosted:   injectSweeplyHostedScript,
-     yourType:        injectYourType,            // ← add this
+     clickbank_bridge: injectClickBankBridgeScript,
+     clickbank_hosted: injectClickBankHostedScript,
+     sweeply_hosted:   injectSweeplyHostedScript,
+     your_type:        injectYourType,            // ← add this
    }
    ```
 3. That's it. The `RouteType` union and the dispatch in `route.ts` update automatically.
@@ -85,7 +75,7 @@ your-nextjs-project/
 │           └── route.ts                        ← Next.js route handler (never edit this)
 ├── lib/
 │   └── lp/
-│       ├── settings.ts                         ← registry: brands + route handlers
+│       ├── settings.ts                         ← route handler registry
 │       └── config/
 │           ├── clickbankBridgeConfig.ts         ← Bridge script injector
 │           ├── clickbankHostedConfig.ts         ← Hosted iframe injector
@@ -210,8 +200,9 @@ Set these in **Vercel** (Project Settings → Environment Variables).
 # Base URL of the CampaignsMng API
 CAMPAIGNS_MNG_URL=https://campaignsmngprod.vercel.app
 
-# Shared secret — must match LINK_PUBLIC_SECRET set on CampaignsMng
-LINK_PUBLIC_SECRET=your-shared-secret-here
+# This brand's own token — generate it on this brand's page in CampaignsMng.
+# Unique per brand. Do not reuse across multiple brand deployments.
+CAMPAIGNS_BRAND_TOKEN=your-brand-token-here
 ```
 
 No extra npm packages are required.
@@ -239,11 +230,11 @@ No SQL or database access needed from the brand site.
 
 ## Route types reference
 
-### `clickbankBridge`
+### `clickbank_bridge`
 Shows the LP then replaces the page with the affiliate URL after `500 ms`. Scroll is blocked during the delay. Adjust `BRIDGE_SETTINGS` in `lib/lp/config/clickbankBridgeConfig.ts`.
 
-### `clickbankHosted`
+### `clickbank_hosted`
 Shows the LP and preloads the ClickBank checkout in a hidden `1×1` iframe `2000 ms` after page load. Adjust `HOSTED_SETTINGS` in `lib/lp/config/clickbankHostedConfig.ts`.
 
-### `sweeplyHosted`
+### `sweeply_hosted`
 Shows the LP and injects the affiliate URL into `#checkout_cta` and all `a.button-main` links. Edit `lib/lp/config/sweeplyHostedConfig.ts` to target different selectors.

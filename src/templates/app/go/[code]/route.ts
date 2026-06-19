@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
-import { getBrand, ROUTE_HANDLERS } from "@/lib/lp/settings"
+import { ROUTE_HANDLERS } from "@/lib/lp/settings"
 
 type CampaignRoute = {
   type: string
@@ -19,22 +19,21 @@ function apiBase(): string {
   return url.replace(/\/$/, "")
 }
 
-function linkSecret(): string {
-  const s = process.env.LINK_PUBLIC_SECRET
-  if (!s) throw new Error("LINK_PUBLIC_SECRET is not set")
-  return s
+function brandToken(): string {
+  const t = process.env.CAMPAIGNS_BRAND_TOKEN
+  if (!t) throw new Error("CAMPAIGNS_BRAND_TOKEN is not set")
+  return t
 }
 
 async function resolveLink(
   paf: string,
-  brand: string,
 ): Promise<{ found: boolean; active: boolean; route?: CampaignRoute }> {
   const res = await fetch(
-    `${apiBase()}/api/public/resolve?brand=${encodeURIComponent(brand)}&paf=${encodeURIComponent(paf)}`,
-    { headers: { "x-link-secret": linkSecret() }, cache: "no-store" }
+    `${apiBase()}/api/public/resolve?paf=${encodeURIComponent(paf)}`,
+    { headers: { "x-brand-token": brandToken() }, cache: "no-store" }
   )
 
-  if (res.status === 401) throw new Error("Invalid LINK_PUBLIC_SECRET")
+  if (res.status === 401) throw new Error("Invalid CAMPAIGNS_BRAND_TOKEN")
   if (!res.ok) throw new Error(`Resolve API error: ${res.status}`)
 
   const data = await res.json()
@@ -45,16 +44,16 @@ async function resolveLink(
     found: true,
     active: true,
     route: {
-      type:         data.routing_type,
-      landing_page: data.prelander_id  ?? null,
+      type:          data.routing_type,
+      landing_page:  data.prelander_id  ?? null,
       affiliate_url: data.affiliate_url ?? null,
     },
   }
 }
 
-function trackClick(paf: string, brand: string, request: NextRequest): void {
+function trackClick(paf: string, request: NextRequest): void {
   const headers: Record<string, string> = {
-    "x-link-secret": linkSecret(),
+    "x-brand-token": brandToken(),
     "Content-Type": "application/json",
   }
   const fwd = request.headers.get("x-forwarded-for")
@@ -67,7 +66,7 @@ function trackClick(paf: string, brand: string, request: NextRequest): void {
   fetch(`${apiBase()}/api/public/click`, {
     method: "POST",
     headers,
-    body: JSON.stringify({ brand, paf }),
+    body: JSON.stringify({ paf }),
   }).catch(err => console.error("[go] click track failed:", err))
 }
 
@@ -101,17 +100,9 @@ export async function GET(
 ) {
   const { code } = await params
 
-  let brand: string
-  try {
-    brand = getBrand(request.headers.get("host") ?? "")
-  } catch (err) {
-    console.error("[go] unknown domain:", err)
-    return new NextResponse("Unknown brand", { status: 404 })
-  }
-
   let resolved: { found: boolean; active: boolean; route?: CampaignRoute }
   try {
-    resolved = await resolveLink(code, brand)
+    resolved = await resolveLink(code)
   } catch (err) {
     console.error("[go] resolve error:", err)
     return new NextResponse("Internal error", { status: 500 })
@@ -121,7 +112,7 @@ export async function GET(
   if (!resolved.active) return NextResponse.redirect(new URL("/expired",   request.url))
 
   const { type, affiliate_url, landing_page } = resolved.route!
-  trackClick(code, brand, request)
+  trackClick(code, request)
 
   const handler = ROUTE_HANDLERS[type]
   if (!handler)

@@ -149,11 +149,13 @@ async function setup(projectRoot, { force = false } = {}) {
 function printEnvReminder() {
   console.log(c.bold('Required Vercel environment variables:'))
   console.log('')
-  console.log('  ' + c.cyan('CAMPAIGNS_MNG_URL') + '      Base URL of the CampaignsMng API')
-  console.log('  ' + c.dim('                         e.g. https://campaignsmngprod.vercel.app'))
-  console.log('  ' + c.cyan('LINK_PUBLIC_SECRET') + '     Shared secret (x-link-secret header)')
+  console.log('  ' + c.cyan('CAMPAIGNS_MNG_URL') + '         Base URL of the CampaignsMng API')
+  console.log('  ' + c.dim('                            e.g. https://campaignsmngprod.vercel.app'))
+  console.log('  ' + c.cyan('CAMPAIGNS_BRAND_TOKEN') + '     This brand\'s own token (x-brand-token header)')
   console.log('')
-  console.log(c.dim('  Brand is resolved automatically from the request domain.'))
+  console.log(c.yellow('  ⚠  CAMPAIGNS_BRAND_TOKEN is unique per brand.'))
+  console.log(c.dim('     Generate it on this brand\'s page in CampaignsMng — do not reuse'))
+  console.log(c.dim('     the same token across multiple brand deployments.'))
   console.log('')
 }
 
