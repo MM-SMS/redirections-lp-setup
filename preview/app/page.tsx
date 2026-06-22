@@ -1,5 +1,5 @@
 import fs from "fs"
-import path from "path"
+import { LP_ROOT } from "../lib/lpRoot"
 
 const AVATAR_COLORS = [
   { bg: "#efeafc", fg: "#7c6fe0" },
@@ -11,10 +11,9 @@ const AVATAR_COLORS = [
 ]
 
 function listLandingPages(): string[] {
-  const lpDir = path.join(process.cwd(), "public", "lp")
   try {
     return fs
-      .readdirSync(lpDir, { withFileTypes: true })
+      .readdirSync(LP_ROOT, { withFileTypes: true })
       .filter(entry => entry.isDirectory())
       .map(entry => entry.name)
       .sort()
