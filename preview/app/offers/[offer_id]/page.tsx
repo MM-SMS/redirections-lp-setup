@@ -52,68 +52,70 @@ export default async function OfferPage({ params }: { params: Promise<{ offer_id
         </span>
       </div>
 
-      <section className="section">
-        <h2 className="section-title">Prelanders ({offer.prelanders.count})</h2>
-        {offer.prelanders.status === "empty" ? (
-          <div className="empty-state">{offer.prelanders.message}</div>
-        ) : (
-          <div className="card-grid">
-            {offer.prelanders.items.map(p => {
-              const openUrl = `${origin}/lp/${p.id}/index.html`
-              return (
-                <div key={p.id} className="detail-card">
-                  <div className="detail-card-top">
-                    <span className="item-avatar" style={{ background: PRELANDER_COLOR.bg, color: PRELANDER_COLOR.fg }}>
-                      <MonitorIcon />
-                    </span>
-                    <div className="detail-card-body">
-                      <span className="item-name">{p.name}</span>
-                      <span className="item-meta" style={{ marginBottom: 0 }}>{p.id}</span>
+      <div className="sections-grid">
+        <section className="section">
+          <h2 className="section-title">Prelanders ({offer.prelanders.count})</h2>
+          {offer.prelanders.status === "empty" ? (
+            <div className="empty-state">{offer.prelanders.message}</div>
+          ) : (
+            <div className="card-grid card-grid-single">
+              {offer.prelanders.items.map(p => {
+                const openUrl = `${origin}/lp/${p.id}/index.html`
+                return (
+                  <div key={p.id} className="detail-card">
+                    <div className="detail-card-top">
+                      <span className="item-avatar" style={{ background: PRELANDER_COLOR.bg, color: PRELANDER_COLOR.fg }}>
+                        <MonitorIcon />
+                      </span>
+                      <div className="detail-card-body">
+                        <span className="item-name">{p.name}</span>
+                        <span className="item-meta" style={{ marginBottom: 0 }}>{p.id}</span>
+                      </div>
+                    </div>
+                    <span className="detail-url" title={openUrl}>{openUrl}</span>
+                    <div className="detail-card-actions">
+                      <a className="open-link" style={{ color: PRELANDER_COLOR.fg }} href={openUrl} target="_blank" rel="noopener noreferrer">
+                        Open ↗
+                      </a>
+                      <CopyButton value={openUrl} />
                     </div>
                   </div>
-                  <span className="detail-url" title={openUrl}>{openUrl}</span>
+                )
+              })}
+            </div>
+          )}
+        </section>
+
+        <section className="section">
+          <h2 className="section-title">Affiliate links ({offer.affiliate_links.count})</h2>
+          {offer.affiliate_links.status === "empty" ? (
+            <div className="empty-state">{offer.affiliate_links.message}</div>
+          ) : (
+            <div className="card-grid card-grid-single">
+              {offer.affiliate_links.items.map((link, idx) => (
+                <div key={idx} className="detail-card">
+                  <div className="detail-card-top">
+                    <span className="item-avatar" style={{ background: AFFILIATE_COLOR.bg, color: AFFILIATE_COLOR.fg }}>
+                      <LinkIcon />
+                    </span>
+                    <div className="detail-card-body">
+                      <span className="item-name">{link.name}</span>
+                      <span className="tag">{link.code}</span>
+                    </div>
+                  </div>
+                  <span className="detail-url" title={link.url}>{link.url}</span>
                   <div className="detail-card-actions">
-                    <a className="open-link" style={{ color: PRELANDER_COLOR.fg }} href={openUrl} target="_blank" rel="noopener noreferrer">
+                    <a className="open-link" style={{ color: AFFILIATE_COLOR.fg }} href={link.url} target="_blank" rel="noopener noreferrer">
                       Open ↗
                     </a>
-                    <CopyButton value={openUrl} />
+                    <CopyButton value={link.url} />
                   </div>
                 </div>
-              )
-            })}
-          </div>
-        )}
-      </section>
-
-      <section className="section">
-        <h2 className="section-title">Affiliate links ({offer.affiliate_links.count})</h2>
-        {offer.affiliate_links.status === "empty" ? (
-          <div className="empty-state">{offer.affiliate_links.message}</div>
-        ) : (
-          <div className="card-grid">
-            {offer.affiliate_links.items.map((link, idx) => (
-              <div key={idx} className="detail-card">
-                <div className="detail-card-top">
-                  <span className="item-avatar" style={{ background: AFFILIATE_COLOR.bg, color: AFFILIATE_COLOR.fg }}>
-                    <LinkIcon />
-                  </span>
-                  <div className="detail-card-body">
-                    <span className="item-name">{link.name}</span>
-                    <span className="tag">{link.code}</span>
-                  </div>
-                </div>
-                <span className="detail-url" title={link.url}>{link.url}</span>
-                <div className="detail-card-actions">
-                  <a className="open-link" style={{ color: AFFILIATE_COLOR.fg }} href={link.url} target="_blank" rel="noopener noreferrer">
-                    Open ↗
-                  </a>
-                  <CopyButton value={link.url} />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
     </main>
   )
 }

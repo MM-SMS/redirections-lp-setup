@@ -154,6 +154,32 @@ a {
   margin-top: 32px;
 }
 
+.sections-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 32px;
+}
+
+.sections-grid .section {
+  margin-top: 0;
+}
+
+.card-grid-single {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 760px) {
+  .sections-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .sections-grid .section + .section {
+    margin-top: 32px;
+  }
+}
+
 .section-title {
   font-size: 16px;
   font-weight: 700;
