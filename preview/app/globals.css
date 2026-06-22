@@ -160,49 +160,69 @@ a {
   margin: 0 0 12px;
 }
 
-.row-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.row-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  background: #fff;
-  border: 1px solid #eceef5;
-  border-radius: 10px;
-  padding: 12px 16px;
-  text-decoration: none;
-  color: #16213e;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.row-item:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(20, 30, 60, 0.08);
-}
-
-.row-title {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.row-meta {
-  font-size: 12px;
-  font-family: "SF Mono", Menlo, Consolas, monospace;
-  color: #9aa3b5;
-  word-break: break-all;
-  text-align: right;
-  flex-shrink: 0;
-}
-
 .offer-counts {
   display: flex;
   gap: 8px;
   margin-top: 4px;
+}
+
+.detail-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 1px 2px rgba(20, 30, 60, 0.04);
+  border: 1px solid #eceef5;
+}
+
+.detail-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.detail-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.detail-url {
+  display: block;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 12px;
+  color: #9aa3b5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 6px;
+}
+
+.detail-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.open-link {
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.copy-btn {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  background: #f5f6fb;
+  border: 1px solid #e2e5ef;
+  border-radius: 999px;
+  padding: 5px 12px;
+  cursor: pointer;
+}
+
+.copy-btn:hover {
+  background: #eceef5;
 }
 
 .tag {
