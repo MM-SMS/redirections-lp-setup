@@ -1,5 +1,6 @@
-import fs from "fs"
-import { LP_ROOT } from "../lib/lpRoot"
+import { fetchOffers } from "../lib/offersApi"
+
+export const dynamic = "force-dynamic"
 
 const AVATAR_COLORS = [
   { bg: "#efeafc", fg: "#7c6fe0" },
@@ -10,55 +11,45 @@ const AVATAR_COLORS = [
   { bg: "#e7faf9", fg: "#1aa6a6" },
 ]
 
-function listLandingPages(): string[] {
-  try {
-    return fs
-      .readdirSync(LP_ROOT, { withFileTypes: true })
-      .filter(entry => entry.isDirectory())
-      .map(entry => entry.name)
-      .sort()
-  } catch {
-    return []
-  }
-}
-
-export default function HomePage() {
-  const lps = listLandingPages()
+export default async function HomePage() {
+  const result = await fetchOffers()
+  const offers = result.ok ? Object.values(result.offers) : []
 
   return (
     <main className="page">
       <div className="page-header">
         <div>
-          <h1 className="page-title">Landing pages</h1>
+          <h1 className="page-title">Offers</h1>
           <p className="page-subtitle">
-            Every landing page bundled in <code>public/lp</code> — the same HTML files the{" "}
-            <code>/go/[code]</code> redirect route serves to real traffic once a campaign is wired up
-            in CampaignsMng. This page is read-only and just for browsing: click a card to open that
-            page exactly as a visitor would see it, with no campaign, affiliate URL, or redirect
-            script involved. Nothing here changes the live redirection logic.
+            Live offers from CampaignsMng. Each one lists its prelanders and affiliate links — open
+            an offer to browse them. This is read-only and doesn&apos;t touch the{" "}
+            <code>/go/[code]</code> redirection logic.
           </p>
         </div>
-        <span className="count-badge">{lps.length} total</span>
+        {result.ok && <span className="count-badge">{result.offer_count} total</span>}
       </div>
 
-      {lps.length === 0 ? (
-        <div className="empty-state">No landing pages found in public/lp.</div>
+      {!result.ok ? (
+        <div className="empty-state">Couldn&apos;t load offers: {result.error}</div>
+      ) : offers.length === 0 ? (
+        <div className="empty-state">{result.message ?? "No offers yet."}</div>
       ) : (
-        <div className="lp-grid">
-          {lps.map((lp, i) => {
+        <div className="card-grid">
+          {offers.map((offer, i) => {
             const color = AVATAR_COLORS[i % AVATAR_COLORS.length]
             return (
-              <a key={lp} className="lp-card" href={`/lp/${lp}/index.html`} target="_blank" rel="noopener noreferrer">
-                <div className="lp-card-top">
-                  <span className="lp-avatar" style={{ background: color.bg, color: color.fg }}>
-                    {lp.charAt(0).toUpperCase()}
+              <a key={offer.offer_id} className="item-card" href={`/offers/${offer.offer_id}`}>
+                <div className="item-card-top">
+                  <span className="item-avatar" style={{ background: color.bg, color: color.fg }}>
+                    {offer.offer_name.charAt(0).toUpperCase()}
                   </span>
-                  <span className="lp-name">{lp}</span>
+                  <span className="item-name">{offer.offer_name}</span>
                 </div>
-                <span className="lp-path">public/lp/{lp}/index.html</span>
-                <span className="lp-open" style={{ color: color.fg }}>
-                  Open ↗
-                </span>
+                <span className="item-meta">{offer.offer_id}</span>
+                <div className="offer-counts">
+                  <span className="tag">{offer.prelanders.count} prelanders</span>
+                  <span className="tag">{offer.affiliate_links.count} links</span>
+                </div>
               </a>
             )
           })}
