@@ -49,7 +49,7 @@ export async function GET(
   }
 
   const ext = path.extname(filePath).toLowerCase()
-  return new NextResponse(data, {
+  return new NextResponse(new Uint8Array(data), {
     status: 200,
     headers: { "Content-Type": MIME_TYPES[ext] ?? "application/octet-stream" },
   })
