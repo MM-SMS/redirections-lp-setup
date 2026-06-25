@@ -10,8 +10,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Trigger Vercel Deploy
+      - name: Trigger Vercel BurnSong
         run: |
           curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"
-      - name: Deploy Project C
+      - name: Deploy Project Onyx
         run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_ONYX }}"
+      - name: Deploy Project Sdamg
+        run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_SDAMG }}"
+      - name: Deploy Project Richmondbalance
+        run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_RCMB }}"
+      - name: Deploy Project Discrevolt
+        run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_DSCV }}"
+      - name: Deploy Project Silvermoon
+        run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_SLVR }}"
+      - name: Deploy Project Sunmasterusa
+        run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_SNMS }}"
+
+        
