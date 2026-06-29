@@ -43,6 +43,8 @@ Handled by `app/go/[code]/route.ts` (installed into the brand project, **never e
    is non-`null`) before using it, so the affiliate partner echoes the id back in its
    conversion postback. The old `POST /api/public/click` call has been removed — that endpoint
    is deprecated server-side (now a no-op kept only for brand sites mid-migration).
+   For `sweeply_hosted` specifically, `route.ts` additionally appends a fixed `aff_click_id={click_id}`
+   regardless of `click_id_param` — Sweeply's own network reads the click id from that exact param name.
 5. Branching:
    - not found → redirect to `/not-found`
    - found but not active → redirect to `/expired`

@@ -8,6 +8,7 @@ type CampaignRoute = {
   type: string
   landing_page: string | null
   affiliate_url: string | null
+  click_id: string | null
 }
 
 // ─────────────────────────────────────────────
@@ -26,20 +27,24 @@ function brandToken(): string {
   return t
 }
 
+function appendQueryParam(url: string, param: string, value: string): string {
+  try {
+    const u = new URL(url)
+    u.searchParams.append(param, value)
+    return u.toString()
+  } catch {
+    const sep = url.includes("?") ? "&" : "?"
+    return `${url}${sep}${encodeURIComponent(param)}=${encodeURIComponent(value)}`
+  }
+}
+
 // SPEC 0155: resolve also records the click server-side and mints a click_id.
 // Append it to affiliate_url as `&{click_id_param}={click_id}` so the affiliate
 // partner echoes it back in the conversion postback. /api/public/click is
 // deprecated (now a no-op) — there's nothing left for this app to call there.
 function appendClickId(affiliateUrl: string | null, clickIdParam: string | null, clickId: string | null): string | null {
   if (!affiliateUrl || !clickIdParam || !clickId) return affiliateUrl
-  try {
-    const url = new URL(affiliateUrl)
-    url.searchParams.append(clickIdParam, clickId)
-    return url.toString()
-  } catch {
-    const sep = affiliateUrl.includes("?") ? "&" : "?"
-    return `${affiliateUrl}${sep}${encodeURIComponent(clickIdParam)}=${encodeURIComponent(clickId)}`
-  }
+  return appendQueryParam(affiliateUrl, clickIdParam, clickId)
 }
 
 async function resolveLink(
@@ -64,6 +69,7 @@ async function resolveLink(
       type:          data.routing_type,
       landing_page:  data.prelander_id ?? null,
       affiliate_url: appendClickId(data.affiliate_url ?? null, data.click_id_param ?? null, data.click_id ?? null),
+      click_id:      data.click_id ?? null,
     },
   }
 }
@@ -109,13 +115,19 @@ export async function GET(
   if (!resolved.found)  return NextResponse.redirect(new URL("/not-found", request.url))
   if (!resolved.active) return NextResponse.redirect(new URL("/expired",   request.url))
 
-  const { type, affiliate_url, landing_page } = resolved.route!
+  const { type, affiliate_url, landing_page, click_id } = resolved.route!
 
   if (!affiliate_url)
     return new NextResponse("Misconfigured: missing affiliate_url", { status: 500 })
 
+  // Sweeply's network reads the click id from a fixed `aff_click_id` param,
+  // regardless of whatever click_id_param the campaign's affiliate network has set.
+  const finalUrl = type === "sweeply_hosted" && click_id
+    ? appendQueryParam(affiliate_url, "aff_click_id", click_id)
+    : affiliate_url
+
   if (!landing_page)
-    return html200(renderDefaultRedirectPage(affiliate_url))
+    return html200(renderDefaultRedirectPage(finalUrl))
 
   const handler = ROUTE_HANDLERS[type]
   if (!handler)
@@ -124,5 +136,5 @@ export async function GET(
   const raw = readLandingHtml(landing_page)
   if (!raw) return new NextResponse(`Landing not found: ${landing_page}`, { status: 500 })
 
-  return html200(handler(raw, affiliate_url))
+  return html200(handler(raw, finalUrl))
 }
