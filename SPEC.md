@@ -38,13 +38,17 @@ Handled by `app/go/[code]/route.ts` (installed into the brand project, **never e
    - `click_id` / `click_id_param` — present only when `found && active` (see below)
 4. **SINGLE-CALL FLOW (SPEC 0155):** on a live resolve, CampaignsMng also records the click
    server-side in the background — there's no separate click call to make. It returns a
-   freshly-minted `click_id` plus the partner pass-through param name `click_id_param`.
-   `route.ts` appends `&{click_id_param}={click_id}` to `affiliate_url` (when `click_id_param`
-   is non-`null`) before using it, so the affiliate partner echoes the id back in its
-   conversion postback. The old `POST /api/public/click` call has been removed — that endpoint
-   is deprecated server-side (now a no-op kept only for brand sites mid-migration).
-   For `sweeply_hosted` specifically, `route.ts` additionally appends a fixed `aff_click_id={click_id}`
-   regardless of `click_id_param` — Sweeply's own network reads the click id from that exact param name.
+   freshly-minted `click_id` plus the partner pass-through param name `click_id_param`. `route.ts`
+   appends it to `affiliate_url` **straight from the API response** before using it, so the
+   affiliate partner echoes the id back in its conversion postback:
+   - `sweeply_hosted` → always `&aff_click_id={click_id}` — Sweeply's network reads the click id
+     from that exact fixed param name, regardless of what `click_id_param` says.
+   - every other route type → `&{click_id_param}={click_id}`, only when `click_id_param` is
+     non-`null`.
+
+   Only one param is ever appended (never both). The old `POST /api/public/click` call has been
+   removed — that endpoint is deprecated server-side (now a no-op kept only for brand sites
+   mid-migration).
 5. Branching:
    - not found → redirect to `/not-found`
    - found but not active → redirect to `/expired`
