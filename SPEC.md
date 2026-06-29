@@ -35,7 +35,15 @@ Handled by `app/go/[code]/route.ts` (installed into the brand project, **never e
    - `routing_type` — which handler in `ROUTE_HANDLERS` to use
    - `prelander_id` — which folder under `public/lp/` to render (or `null`)
    - `affiliate_url` — where the user ultimately needs to end up
-4. Branching:
+   - `click_id` / `click_id_param` — present only when `found && active` (see below)
+4. **SINGLE-CALL FLOW (SPEC 0155):** on a live resolve, CampaignsMng also records the click
+   server-side in the background — there's no separate click call to make. It returns a
+   freshly-minted `click_id` plus the partner pass-through param name `click_id_param`.
+   `route.ts` appends `&{click_id_param}={click_id}` to `affiliate_url` (when `click_id_param`
+   is non-`null`) before using it, so the affiliate partner echoes the id back in its
+   conversion postback. The old `POST /api/public/click` call has been removed — that endpoint
+   is deprecated server-side (now a no-op kept only for brand sites mid-migration).
+5. Branching:
    - not found → redirect to `/not-found`
    - found but not active → redirect to `/expired`
    - found + active, no `affiliate_url` → hard `500` (misconfigured link, not a code bug)
@@ -43,8 +51,6 @@ Handled by `app/go/[code]/route.ts` (installed into the brand project, **never e
      (`lib/lp/config/defaultRedirectPage.ts`), route type is irrelevant here
    - found + active, both present → read `public/lp/<prelander_id>/index.html`, run it through
      the handler for `routing_type`, return the result
-5. In parallel (fire-and-forget, never blocks the response): `POST /api/public/click` to
-   CampaignsMng to record the click.
 
 **The brand token answers "whose links is this," not "which link/campaign."** The token scopes
 the *brand* (so one Vercel deployment can only ever read/click its own brand's links). The

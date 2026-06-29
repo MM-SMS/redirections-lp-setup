@@ -18,9 +18,11 @@ The system serves landing pages from your Next.js project and injects a small sc
 
 Traffic hits `/go/[code]` (e.g. `/go/pc3xxdxx`). The route handler:
 
-1. Calls the **CampaignsMng public API** (`/api/public/resolve`) to look up the campaign, authenticating with this brand's own token.
-2. Reads the matching HTML file from `public/lp/`, looks up the inject function for the route type, and returns the page.
-3. Fires a click event to CampaignsMng (`/api/public/click`) in the background — never blocks the response.
+1. Calls the **CampaignsMng public API** (`/api/public/resolve`) to look up the campaign, authenticating with this brand's own token. On a live link, this single call also records the click server-side and returns a freshly-minted `click_id` plus the partner pass-through param name `click_id_param`.
+2. Appends `&{click_id_param}={click_id}` to the `affiliate_url` (when `click_id_param` is set) so the affiliate partner echoes the id back in its conversion postback.
+3. Reads the matching HTML file from `public/lp/`, looks up the inject function for the route type, and returns the page.
+
+`/api/public/click` is deprecated (now a no-op server-side) and is no longer called — click tracking moved into `/api/public/resolve`.
 
 The brand site never touches the database directly.
 

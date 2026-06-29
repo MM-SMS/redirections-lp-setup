@@ -26,6 +26,22 @@ function brandToken(): string {
   return t
 }
 
+// SPEC 0155: resolve also records the click server-side and mints a click_id.
+// Append it to affiliate_url as `&{click_id_param}={click_id}` so the affiliate
+// partner echoes it back in the conversion postback. /api/public/click is
+// deprecated (now a no-op) — there's nothing left for this app to call there.
+function appendClickId(affiliateUrl: string | null, clickIdParam: string | null, clickId: string | null): string | null {
+  if (!affiliateUrl || !clickIdParam || !clickId) return affiliateUrl
+  try {
+    const url = new URL(affiliateUrl)
+    url.searchParams.append(clickIdParam, clickId)
+    return url.toString()
+  } catch {
+    const sep = affiliateUrl.includes("?") ? "&" : "?"
+    return `${affiliateUrl}${sep}${encodeURIComponent(clickIdParam)}=${encodeURIComponent(clickId)}`
+  }
+}
+
 async function resolveLink(
   paf: string,
 ): Promise<{ found: boolean; active: boolean; route?: CampaignRoute }> {
@@ -46,29 +62,10 @@ async function resolveLink(
     active: true,
     route: {
       type:          data.routing_type,
-      landing_page:  data.prelander_id  ?? null,
-      affiliate_url: data.affiliate_url ?? null,
+      landing_page:  data.prelander_id ?? null,
+      affiliate_url: appendClickId(data.affiliate_url ?? null, data.click_id_param ?? null, data.click_id ?? null),
     },
   }
-}
-
-function trackClick(paf: string, request: NextRequest): void {
-  const headers: Record<string, string> = {
-    "x-brand-token": brandToken(),
-    "Content-Type": "application/json",
-  }
-  const fwd = request.headers.get("x-forwarded-for")
-  const ua  = request.headers.get("user-agent")
-  const ref = request.headers.get("referer")
-  if (fwd) headers["x-forwarded-for"] = fwd
-  if (ua)  headers["user-agent"]       = ua
-  if (ref) headers["referer"]          = ref
-
-  fetch(`${apiBase()}/api/public/click`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({ paf }),
-  }).catch(err => console.error("[go] click track failed:", err))
 }
 
 // ─────────────────────────────────────────────
@@ -113,7 +110,6 @@ export async function GET(
   if (!resolved.active) return NextResponse.redirect(new URL("/expired",   request.url))
 
   const { type, affiliate_url, landing_page } = resolved.route!
-  trackClick(code, request)
 
   if (!affiliate_url)
     return new NextResponse("Misconfigured: missing affiliate_url", { status: 500 })
