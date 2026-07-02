@@ -27,5 +27,6 @@ export const LEGACY_PAF_REDIRECTS: Record<string, string> = {
   rv5cg: "https://healthyrations.com/go/nfu64z3u",
   rnqba: "https://healthyrations.com/go/wcnl03pi",
   rtnp5: "https://healthyrations.com/go/es8w4wce",
-  rq62q: "https://healthyrations.com/go/r0n2zanp",
+  rq62q: "https://healthyrations.com/go/k5af06sq",
+
 }
