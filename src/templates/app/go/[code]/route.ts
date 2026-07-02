@@ -3,6 +3,7 @@ import fs from "fs"
 import path from "path"
 import { ROUTE_HANDLERS } from "@/lib/lp/settings"
 import { renderDefaultRedirectPage } from "@/lib/lp/config/defaultRedirectPage"
+import { LP_SCRIPT_VERSION } from "@/lib/lp/version"
 
 type CampaignRoute = {
   type: string
@@ -81,7 +82,11 @@ function readLandingHtml(prelander: string): string | null {
 }
 
 function html200(body: string): NextResponse {
-  return new NextResponse(body, {
+  const html = body.replace(
+    "</body>",
+    `<script>console.log('[lp] build v${LP_SCRIPT_VERSION}')</script>\n</body>`
+  )
+  return new NextResponse(html, {
     status: 200,
     headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store, no-cache" },
   })

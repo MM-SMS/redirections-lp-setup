@@ -157,6 +157,13 @@ project after install).
    reinstall the package and re-run `npx redirections-lp-setup --force` (§5) — pushing here does
    **not** silently patch already-deployed brand projects.
 
+**Versioning:** every config in `lib/lp/config/` (plus `defaultRedirectPage.ts`) logs
+`console.log('[name] script v<sha>')` from inside its injected `<script>`. The version string is
+set automatically at build time from `process.env.VERCEL_GIT_COMMIT_SHA` (short 7-char git SHA,
+set by Vercel on every deploy; falls back to `"local"` in local dev). No manual bumping — after
+a brand re-runs `--force` and redeploys you can open devtools on the live site and confirm which
+commit is actually running there.
+
 ---
 
 ## 5. `lib/lp/settings.ts` — what it actually is
