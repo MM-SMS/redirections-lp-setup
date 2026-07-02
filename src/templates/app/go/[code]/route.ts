@@ -4,6 +4,7 @@ import path from "path"
 import { ROUTE_HANDLERS } from "@/lib/lp/settings"
 import { renderDefaultRedirectPage } from "@/lib/lp/config/defaultRedirectPage"
 import { LP_SCRIPT_VERSION } from "@/lib/lp/version"
+import { LEGACY_PAF_REDIRECTS } from "./legacyPafRedirects"
 
 type CampaignRoute = {
   type: string
@@ -101,6 +102,9 @@ export async function GET(
   { params }: { params: Promise<{ code: string }> }
 ) {
   const { code } = await params
+
+  const legacyUrl = LEGACY_PAF_REDIRECTS[code]
+  if (legacyUrl) return NextResponse.redirect(legacyUrl, { status: 301 })
 
   let resolved: { found: boolean; active: boolean; route?: CampaignRoute }
   try {
