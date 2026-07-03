@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOX 5 NEWS | SPECIAL INVESTIGATIVE REPORT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/lp/kinzeno_v1/css/styles.css">
+    <link rel="icon" href="/lp/kinzeno_v1/images/favicon.png">
+</head>
+<body>
+
+      <header>
+
+      <!-- DESKTOP HEADER -->
+      <div class="hdr-desk-1a2b3c">
+         <div class="hdr-cont-4f5g6h">
+
+            <div class="hdr-logo-7i8j9k">
+            <img src="/lp/kinzeno_v1/images/logo.svg" alt="logo">
+            </div>
+
+            <nav class="hdr-nav-0l1m2n">
+            <a href="#">Watch Live</a>
+            <a href="#">News</a>
+            <a href="#">Weather</a>
+            <a href="#" class="hdr-active-3o4p5q">Good Day</a>
+            <a href="#">Good Night</a>
+            <a href="#">Contest</a>
+            <a href="#">More</a>
+            </nav>
+
+            <div class="hdr-search-6r7s8t">
+            <img src="/lp/kinzeno_v1/images/search-icon.png" alt="search">
+            </div>
+
+         </div>
+      </div>
+
+      <!-- MOBILE HEADER -->
+      <div class="hdr-mob-9u0v1w">
+         <img src="/lp/kinzeno_v1/images/logo.svg" class="hdr-logo-mob-2x3y4z" alt="logo">
+
+         <div class="hdr-right-mob-5a6b7c">
+            <button class="hdr-live-btn-8d9e0f">Watch Live</button>
+            <img src="/lp/kinzeno_v1/images/burger-menu.png" class="hdr-burger-1g2h3i" alt="menu">
+         </div>
+      </div>
+
+      <style>
+
+         /* ===== DESKTOP HEADER ===== */
+         .hdr-desk-1a2b3c {
+         background: #00144e;
+         border-top: 4px solid #a70100;
+
+         position: sticky;   /* прилипання */
+         top: 0;             /* зверху */
+         z-index: 999;       /* щоб було поверх всього */
+         }
+
+         .hdr-cont-4f5g6h {
+         max-width: 1200px;
+         margin: 0 auto;
+         padding: 14px 20px;
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+         }
+
+         .hdr-logo-7i8j9k img {
+         height: 40px;
+         }
+
+         .hdr-nav-0l1m2n {
+         display: flex;
+         gap: 28px;
+         }
+
+         .hdr-nav-0l1m2n a {
+         color: white;
+         text-decoration: none;
+         font-size: 16px;
+         position: relative;
+         padding-bottom: 8px;
+         }
+
+         .hdr-active-3o4p5q::after {
+         content: "";
+         position: absolute;
+         left: 0;
+         bottom: 0;
+         width: 100%;
+         height: 3px;
+         background: #a70100;
+         }
+
+         .hdr-nav-0l1m2n a:hover::after {
+         content: "";
+         position: absolute;
+         left: 0;
+         bottom: 0;
+         width: 100%;
+         height: 3px;
+         background: #a70100;
+         }
+
+         .hdr-search-6r7s8t img {
+         height: 20px;
+         cursor: pointer;
+         }
+
+         /* ===== MOBILE HEADER ===== */
+         .hdr-mob-9u0v1w {
+            display: none;
+            background: #00144e;
+            border-top: 4px solid #a70100;
+            padding: 10px 15px;
+            align-items: center;
+            justify-content: space-between;
+
+            position: sticky;   /* прилипання */
+            top: 0;
+            z-index: 999;
+         }
+
+         .hdr-logo-mob-2x3y4z {
+         height: 34px;
+         max-width: 100px;
+         }
+
+         .hdr-right-mob-5a6b7c {
+         display: flex;
+         align-items: center;
+         gap: 10px;
+         }
+
+         .hdr-live-btn-8d9e0f {
+         background: #a70100;
+         color: white;
+         border: none;
+         padding: 6px 12px;
+         border-radius: 3px;
+         font-size: 14px;
+         cursor: pointer;
+         white-space: nowrap;
+         }
+
+         .hdr-burger-1g2h3i {
+         height: 22px;
+         cursor: pointer;
+         }
+
+         /* ===== RESPONSIVE ===== */
+         @media (max-width: 900px) {
+         .hdr-desk-1a2b3c {
+            display: none;
+         }
+
+         .hdr-mob-9u0v1w {
+            display: flex;
+         }
+         }
+      </style>
+      </header>
+
+    <main class="site-main">
+        <article class="news-article">
+            
+            <h1 class="article-title"><span class="red-text">THE SILENT CRIPPLER:</span> Why 93% of Americans Over 50 Are on a Countdown to a Wheelchair — and Why Big Pharma Is Paying Billions to Keep You Buying Pills That Don't Work</h1>
+            
+            <p class="article-lead">
+                A pioneering Japanese scientist made a discovery so threatening to the pharmaceutical industry that corporate lawyers tried to scrub it from the internet. <span class="highlight-yellow">What he revealed: the harmless morning stiffness you ignore every day can spiral into irreversible bone necrosis in as little as 90 days.</span>
+            </p>
+
+            <div class="article-meta">
+                <span class="author">By FOX 5 NEWS | SPECIAL INVESTIGATIVE REPORT</span>
+                <span class="publish-date">Published: <span id="live-date-article"></span></span>
+                <span class="status-alert" style="color: #c0392b; font-weight: bold; margin-left: 15px;"><i class="fas fa-exclamation-triangle"></i> Status: High Alert / Restricted Access</span>
+            </div>
+
+            <div class="main-image" style="margin-bottom: 30px;">
+                <img src="/lp/kinzeno_v1/images/first.png" alt="Japanese Scientist" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px; border: 2px solid #e74c3c;">
+            </div>
+
+            <h2>The Morning Routine That Is Silently Destroying Your Life</h2>
+            <p>It starts with something so ordinary you barely notice. You wake up, swing your legs over the side of the bed, and feel that familiar, dull stiffness settling into your knees or lower back. There is a faint pop when you stand. A grinding crack as you walk down the stairs. You wave it off — "It’s just age," or "Must be the weather."</p>
+            <p class="red-text" style="font-weight: bold; font-size: 1.1em;">That dismissal is the most dangerous mistake you will ever make.</p>
+            <div class="inline-image" style="margin: 30px 0;">
+                <img src="/lp/kinzeno_v1/images/second.png" alt="Joint Inflammation" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+            </div>
+            <p>What you are actually hearing is your cartilage — the only living cushion between your bones — drying out and grinding into dust. Once that cushion is gone, bare bone scrapes against bare bone with every step you take, every stair you climb, every time you lower yourself into a chair. Microscopic fractures multiply silently, and the damage accelerates faster than your body can repair it.</p>
+
+            <p>And it never stays in one place.</p>
+
+            <h3 style="margin-top: 30px; color: #c0392b;">When Your Legs Betray You</h3>
+            <p>For millions of Americans over 50, the first sign that something is deeply wrong comes from their legs. Not a sharp injury — just a heaviness that was not there before. Walking to the mailbox feels like wading through wet concrete. A trip to the grocery store leaves your knees throbbing and your hips locked up by the time you reach the car. By evening, the aching settles deep into your calves and thighs, a dull fire that no amount of rest can extinguish.</p>
+            <div class="inline-image" style="margin: 30px 0;">
+                <img src="/lp/kinzeno_v1/images/margaret.png" alt="Joint Inflammation" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+            </div>
+            <p>Margaret, 67, from Tampa, described it this way: she used to walk her neighborhood every morning for twenty years. Then one spring, her legs simply stopped cooperating. The stiffness in her knees grew so severe she could no longer carry her groceries up the three porch steps without gripping the railing with both hands. Within months, she stopped leaving the house altogether — not because she chose to, but because her own legs made the decision for her.</p>
+            <p>What most people do not realize is that leg pain of this kind is not muscular. It is the cartilage inside the knee and hip joints collapsing under decades of wear, sending distress signals radiating down through the entire leg. The body compensates by shifting weight, tightening surrounding muscles, and creating a chain reaction of stiffness that spreads from the ankle to the hip. Left unchecked, it does not plateau. It steals your mobility one block at a time.</p>
+
+            <h3 style="margin-top: 30px; color: #c0392b;">The Back Pain Epidemic No One Is Talking About</h3>
+            <p>If your legs are the foundation, your back is the frame that holds everything together — and when it starts to fail, your entire life tilts sideways. Lower back pain is the single most common reason Americans over 50 visit a doctor, yet the vast majority walk out with nothing more than a prescription for painkillers and a pamphlet on stretching.</p>
+            <p>The reality is far more sinister. Years of sitting at desks, standing on hard floors, and carrying the accumulated tension of daily life compress the discs and inflame the facet joints of the lumbar spine. You wake up in the morning and cannot straighten your back for the first ten minutes. You bend down to tie your shoes and a white-hot bolt of pain shoots from your lower spine all the way down into your calf — the unmistakable signature of sciatic nerve compression. The cycle is vicious: inflammation causes tension, tension restricts blood flow, restricted blood flow starves the cartilage of nutrients, and the cartilage deteriorates further.</p>
+            <div class="inline-image" style="margin: 30px 0;">
+                <img src="/lp/kinzeno_v1/images/backpain.jpg" alt="Joint Inflammation" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+            </div>
+            <p>For many, back pain becomes the invisible prison they carry everywhere. They cannot sit through a movie. They cannot drive more than thirty minutes without pulling over to stretch. They lie awake at night shifting from side to side, searching for a position that does not send a jolt of fire through their spine. And every morning, the stiffness is a little worse than the day before.</p>
+
+
+            <h3 style="margin-top: 30px; color: #c0392b;">Shoulders Frozen in Time</h3>
+            <p>Then there are the shoulders — the joints most people forget about until the day they cannot reach the top shelf, fasten a bra, or lift a grandchild without a sharp, stabbing pain that takes their breath away. Shoulder degeneration is particularly cruel because it attacks the very motions that define independence: getting dressed, washing your hair, reaching for a seatbelt.</p>
+            
+            <div class="inline-image" style="margin: 30px 0;">
+                <img src="/lp/kinzeno_v1/images/shoulderarthritic.png" alt="Joint Inflammation" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+            </div>
+           
+            <p>It often starts as a nagging tightness after sleeping on one side. You roll your shoulder, hear a grinding click, and move on with your day. But over weeks and months, the range of motion quietly shrinks. Reaching overhead becomes impossible. The tension creeps up into the neck, locking the muscles along your trapezius into a permanent knot of pain that no massage can release. Doctors call it "frozen shoulder" — and the name is grimly accurate, because without intervention, the joint capsule thickens, scar tissue forms, and the shoulder can literally freeze in place.</p>
+
+            <div class="cta-container">
+                <a href="#final-offer-section" class="order-button button-main pulse-effect">LOOSEN UP YOUR SHOULDERS RIGHT NOW</a>
+            </div>
+            <p>What connects all of these — the legs, the back, the shoulders — is a single, devastating truth: the cartilage protecting each of these joints is dying. Different locations, same disease. And the same silent clock is ticking in every one of them.</p>
+
+            <h2 style="margin-top: 40px;">What Happens When You Do Nothing: The True Cost of Ignoring Chronic Pain</h2>
+            <p>Most people believe that tolerating pain is the safe choice — that doing nothing is at least neutral, if not brave. It is neither. Doing nothing in the face of chronic joint pain is one of the most destructive decisions a person can make, because the damage does not pause while you wait. It compounds.</p>
+            <div class="inline-image" style="margin: 30px 0;">
+                <img src="/lp/kinzeno_v1/images/facetsyndrome.jpg" alt="Joint Inflammation" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+            </div>
+            <p>Physically, untreated joint degeneration follows a predictable and merciless path. The pain in your knee forces you to favor your other leg, and within months that hip develops its own inflammation. Your back compensates for both, and soon you are dealing with three sources of agony instead of one. Cartilage, once lost, does not grow back on its own. The grinding becomes bone-on-bone. Sleep — the body's only time to heal — is shattered by pain that wakes you at two, three, four in the morning. Over time, chronic sleep deprivation weakens the immune system, raises blood pressure, and accelerates the aging of every organ in your body.</p>
+            <p>But the physical toll is only half the story. Researchers at Johns Hopkins and the Mayo Clinic have documented what chronic pain patients already know: unrelenting pain rewires the brain. Anxiety becomes constant. Depression sets in — not as sadness, but as a flat, gray exhaustion that makes it impossible to care about things you once loved. You cancel dinner plans. You stop calling friends. You sit in your living room watching television you do not enjoy because getting up hurts too much. The medical term is "pain catastrophizing," but the human term is simpler: you lose yourself. Your identity shrinks to fit the boundaries your pain allows.</p>
+            <div class="inline-image" style="margin: 30px 0;">
+                <img src="/lp/kinzeno_v1/images/bonenecros.webp" alt="Joint Inflammation" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+            </div>
+            <p>And then there is the life you quietly surrender. The retirement trip you planned for decades gets postponed indefinitely. The garden goes untended. You stop picking up your grandchildren because your back or your shoulders cannot bear the weight. Relationships strain under the constant tension of a partner in pain — conversations narrow to symptoms, appointments, and what you can no longer do together. Hobbies that once brought joy become sources of grief, reminders of the person you used to be.</p>
+
+            <div class="cta-container">
+                <a href="#final-offer-section" class="order-button button-main pulse-effect">GET RID OF YOUR PAIN RIGHT NOW</a>
+            </div>
+
+            <p>This is not a scare tactic. This is the documented, peer-reviewed trajectory of untreated chronic joint pain. And the cruelest part is that it is entirely avoidable — if, and only if, you stop the degeneration before it passes the point of no return.</p>
+            <div class="inline-image" style="margin: 30px 0;">
+                <img src="/lp/kinzeno_v1/images/shoulderarthritic.png" alt="Joint Inflammation" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+            </div>
+
+            <h2>The Multi-Billion Dollar Medical Trap: Why Nothing You’ve Tried Has Worked</h2>
+            <p>If you have tried treating your pain — and by now, most Americans over 50 have tried everything — you have noticed the same maddening cycle. The gels, creams, and pills from your pharmacy dull the edge for an hour or two, and then the pain floods back, often worse than it was before you applied anything.</p>
+            <p>This is not a coincidence. It is a business model. The American pharmaceutical complex has no financial incentive to cure you. <span class="highlight-yellow">A cured patient is a lost customer. A patient in perpetual pain is a lifetime revenue stream.</span></p>
+            <div class="inline-image" style="margin: 30px 0;">
+                <img src="/lp/kinzeno_v1/images/third.png" alt="Joint Inflammation" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+            </div>
+            <ul>
+                <li><strong>The Pharmacy Creams:</strong> Standard drugstore ointments just flood your skin with menthol or artificial heat to distract your nerves. Meanwhile, underneath the skin, your joint continues to rot.</li>
+                <li><strong>The Dangerous NSAID Pills:</strong> Popular pain relievers and prescription pills are a ticking time bomb. They slowly erode your stomach lining, cause ulcers, and heavily tax your liver and kidneys—all while doing absolutely zero to rebuild your joints.</li>
+                <li><strong>The Surgery Nightmare:</strong> Your doctor might suggest a total knee or hip replacement. What they don't tell you is that in the US, these surgeries can cost upwards of $45,000, insurance often fights the claims, and the rehabilitation takes months. Worst of all? There is a massive risk of chronic post-op infection, leaving many Americans in worse pain than before they went under the knife.</li>
+            </ul>
+            <p>So is there truly no way out? Are you condemned to drain your retirement savings on temporary fixes while your joints quietly disintegrate — until the day you can no longer walk at all? The answer, it turns out, was hiding 6,000 miles away, in a small laboratory in Kyoto, Japan.</p>
+
+            <h2>The Kyoto Miracle: A Son’s Promise to His Dying Mother</h2>
+            <p>Eleven years ago, in a quiet residential district of Kyoto, prominent Japanese biomedical scientist Dr. Komuto Kinzeno faced the kind of family tragedy that changes everything.</p>
+            <blockquote class="expert-quote">
+                <strong>The Tragedy That Sparked a Revolution:</strong><br>
+                <div class="inline-image" style="margin: 30px 0;">
+                    <img src="/lp/kinzeno_v1/images/fourth.png" alt="Joint Inflammation" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+                </div>
+                Dr. Kinzeno’s mother was a legendary artisan in Kyoto, famous for her intricate, hand-painted silk kimonos. Her hands were her life. But in her early 60s, an aggressive form of arthritis struck. Within months, her fingers deformed so badly she could no longer hold a paintbrush.
+            </blockquote>
+            <p>Desperate, she followed every piece of conventional medical advice: high-dose steroid injections, western anti-inflammatory drugs, physical therapy that left her sobbing. The result was catastrophic. The medications failed to save her joints, and the brutal chemical side effects triggered acute kidney failure. She spent her final years confined to a hospital bed, crying out in agony from the slightest movement of her once-magnificent hands.</p>
+            <p>Watching his mother waste away — knowing that the very treatments meant to save her had accelerated her decline — Dr. Kinzeno made a solemn vow at her bedside: he would find a way to naturally regenerate human joint tissue without toxic chemicals or invasive surgeries, or he would spend the rest of his life trying.</p>
+            <div class="inline-image" style="margin: 30px 0;">
+                <img src="/lp/kinzeno_v1/images/five.png" alt="Joint Inflammation" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+            </div>
+            <p>Dr. Kinzeno retreated into his laboratory and did not emerge for over a decade. He fused cutting-edge Japanese molecular biology with ancient, closely guarded Asian botanical extracts renowned for their cellular regeneration properties. After 11 years of relentless testing and millions of dollars in research, he finally perfected a bio-available formulation that achieved what the medical establishment had declared impossible.</p>
+            <p>He did not create another painkiller. <span class="highlight-yellow">He created a breakthrough that honored his mother's legacy — and subsequently restored full mobility to over 14,000 clinical trial participants across Asia.</span></p>
+
+            <h2>Introducing Kinzeno Gel: The Only Treatment That Attacks the Root Cause</h2>
+            <p>Now, for the first time ever, this revolutionary Japanese medical breakthrough is available to everyday Americans.</p>
+            <div class="inline-image" style="margin: 30px 0;">
+                <img src="/lp/kinzeno_v1/images/six.png" alt="Joint Inflammation" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+            </div>
+            <p>Meet <strong>Kinzeno Gel</strong> — the world’s first transdermal molecular treatment engineered to reverse arthritis and joint degeneration at its source. Whether the pain is in your knees, your lower back, your shoulders, your hips, or radiating down your legs, the mechanism of destruction is the same — and so is the solution.</p>
+            <p>Unlike anything you have ever tried, Kinzeno Gel utilizes a proprietary "Liquid Cartilage" delivery system. The gel contains microscopic, bio-active peptides that pass effortlessly through the skin layers. Instead of sitting on the surface and masking symptoms, they penetrate deep into the joint capsule itself, infusing the starving cartilage with the precise molecular building blocks it needs to rebuild.</p>
+
+            <div class="cta-container">
+                <a href="#final-offer-section" class="order-button button-main pulse-effect">ORDER NOW: GET KINZENO GEL</a>
+            </div>
+            
+            <h3 style="margin-top: 25px;">How Kinzeno Gel Restores Your Body in 3 Stages:</h3>
+            <ul>
+                <li><strong>Day 1–3 (Pain Elimination):</strong> Naturally blocks the inflammation enzymes, reducing swelling and providing instant, deep relief without numbing your skin.</li>
+                <li><strong>Day 7–14 (Synovial Fluid Restoration):</strong> Rehydrates the joint capsule, lubricating the area so your bones stop grinding together. The cracking and popping sounds disappear.</li>
+                <li><strong>Day 21–28 (Cellular Regeneration):</strong> Stimulates the rapid growth of brand-new, healthy chondrocytes (cartilage cells), effectively giving you the joints of a 25-year-old.</li>
+            </ul>
+
+            <div class="instructions-section">
+                <h2 style="margin-top: 40px; text-align: center;">How to Apply Kinzeno Gel</h2>
+                <div class="how-to-use-grid">
+                    <div class="step-card">
+                        <div class="step-gif-placeholder" style="padding: 0; overflow: hidden; border: none;">
+                            <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
+                                <source src="/lp/kinzeno_v1/images/apply.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <h3>1. Apply</h3>
+                        <p>Squeeze a coin-sized amount directly onto the area — knees, lower back, hands, shoulders and etc. A little goes a long way.</p>
+                        <ul style="font-size: 14px; margin-top: 10px; list-style: none; padding: 0;">
+                            <li><i class="fas fa-check red-text"></i> Instant cooling sensation</li>
+                            <li><i class="fas fa-check red-text"></i> Works on contact</li>
+                            <li><i class="fas fa-check red-text"></i> No residue</li>
+                        </ul>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-gif-placeholder" style="padding: 0; overflow: hidden; border: none;">
+                            <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
+                                <source src="/lp/kinzeno_v1/images/massage.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <h3>2. Massage</h3>
+                        <p>Massage the area with the gel with circular pressure. The massage activates the micro-bubbles and soothes the area.</p>
+                         <ul style="font-size: 14px; margin-top: 10px; list-style: none; padding: 0;">
+                            <li><i class="fas fa-check red-text"></i> Micro-bubbles activate</li>
+                            <li><i class="fas fa-check red-text"></i> Tackles root cause</li>
+                            <li><i class="fas fa-check red-text"></i> Pain starts fading</li>
+                        </ul>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-gif-placeholder" style="padding: 0; overflow: hidden; border: none;">
+                            <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
+                                <source src="/lp/kinzeno_v1/images/feel.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <h3>3. Feel The Difference</h3>
+                        <p>No need to wait. No greasy residue, no strong smell. The effects last after massaging the gel on the area.</p>
+                         <ul style="font-size: 14px; margin-top: 10px; list-style: none; padding: 0;">
+                            <li><i class="fas fa-check red-text"></i> Relief moves with you</li>
+                            <li><i class="fas fa-check red-text"></i> Pleasant odor, no staining</li>
+                            <li><i class="fas fa-check red-text"></i> Safe to repeat 2–4x daily</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cta-container">
+                <a href="#final-offer-section" class="order-button button-main pulse-effect">ORDER NOW: GET KINZENO GEL</a>
+            </div>
+
+            <h2>How Does It Compare to Standard Treatments?</h2>
+            
+            <div class="step-gif-placeholder" style="padding: 0; overflow: hidden; border: none;">
+                <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
+                    <source src="/lp/kinzeno_v1/images/one-gel.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+
+            <div class="comparison-table-container">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Features & Benefits</th>
+                            <th class="kinzeno-col">Kinzeno Gel</th>
+                            <th>Standard Pharmacy Creams</th>
+                            <th>Joint Surgery</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Eliminates Pain Instantly?</td>
+                            <td class="kinzeno-col"><span class="table-check">YES</span> (Within 10 minutes)</td>
+                            <td>Only masks it for 1-2 hours</td>
+                            <td class="table-x">No (Requires months of painful rehab)</td>
+                        </tr>
+                        <tr>
+                            <td>Regenerates Cartilage?</td>
+                            <td class="kinzeno-col"><span class="table-check">YES</span> (Proven cellular repair)</td>
+                            <td class="table-x">NO (Zero structural impact)</td>
+                            <td class="table-x">No (Replaces it with plastic/metal)</td>
+                        </tr>
+                        <tr>
+                            <td>100% Safe with No Side Effects?</td>
+                            <td class="kinzeno-col"><span class="table-check">YES</span> (All-natural bio-peptides)</td>
+                            <td class="table-x">NO (Can cause skin irritation)</td>
+                            <td class="table-x">NO (Risk of infection/blood clots)</td>
+                        </tr>
+                        <tr>
+                            <td>Financial Cost</td>
+                            <td class="kinzeno-col">Highly Affordable</td>
+                            <td>Expensive over time (Continuous use)</td>
+                            <td class="table-x">Astronomical ($40,000+ out of pocket)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="cta-container">
+                <a href="#final-offer-section" class="order-button button-main pulse-effect">ORDER NOW: GET KINZENO GEL</a>
+            </div>
+
+            <div class="inline-image" style="margin: 30px 0;">
+                <img src="/lp/kinzeno_v1/images/seven.png" alt="Joint Inflammation" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+            </div>
+
+            <h2 class="red-text" style="text-align: center; font-size: 26px; margin-top: 40px;">Real Americans, Real Results: Live Comments From Our Readers</h2>
+            
+            <div class="reviews-container">
+                <div class="review-card">
+                    <div class="review-photo-wrapper">
+                        <img src="/lp/kinzeno_v1/images/review1.png" alt="Linda S.">
+                    </div>
+                    <div class="review-content">
+                        <strong>Linda S, 64 (Austin, TX)</strong>
+                        <div class="stars">★★★★★</div>
+                        <p>"I was scheduled for a left knee replacement this April. The pain was so bad I couldn't even walk my dog to the end of the driveway. My son found this article and ordered Kinzeno Gel for me. I swear by day 4 the swelling completely vanished. It’s been a month now, I cancelled my surgery, and I’m back to walking 3 miles every evening. This gel saved my life and my savings!"</p>
+                    </div>
+                </div>
+                
+                <div class="review-card">
+                    <div class="review-photo-wrapper">
+                        <img src="/lp/kinzeno_v1/images/review2.png" alt="Robert T.">
+                    </div>
+                    <div class="review-content">
+                        <strong>Robert T, 71 (Ocala, FL)</strong>
+                        <div class="stars">★★★★★</div>
+                        <p>"I spent 15 years taking ibuprofen for my lower back and hips until my doctor told me my liver couldn't take it anymore. I felt hopeless. I tried Kinzeno Gel expecting another gimmick. I was completely wrong. The deep warmth it gives actually heals. My lower back hasn't felt this loose and pain-free since my 40s."</p>
+                    </div>
+                </div>
+                
+                 <div class="review-card">
+                    <div class="review-photo-wrapper">
+                        <img src="/lp/kinzeno_v1/images/review3.png" alt="David K."> </div>
+                    <div class="review-content">
+                        <strong>David K, 58 (Columbus, OH)</strong>
+                        <div class="stars">★★★★★</div>
+                        <p>"Unbelievable product. My hands are my living (I’m a carpenter). The arthritis was getting so bad I couldn't grip my tools. Three weeks of using Kinzeno Gel and my fingers are completely straight, flexible, and pain-free. Don't waste your money in pharmacies, get this immediately."</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="final-offer-section" class="final-offer-box">
+                <h2 class="urgent-title">CRITICAL UPDATE: How to Claim Your 70% Subsidy Today</h2>
+                <p class="offer-desc">Kinzeno Gel poses a direct threat to the profits of the largest pharmaceutical companies in America — and their lobbyists are already working to shut down its distribution. We cannot guarantee how much longer this page will remain accessible.</p>
+                <p class="offer-desc" style="margin-top: 10px;">To ensure that everyday Americans who are suffering right now can get the help they need before it is too late, The Joint & Arthritis Support Foundation has stepped in and pre-paid 70% of the cost for the current incoming batch. Thanks to this foundation's unprecedented subsidy, you do not have to pay the full retail price.</p>
+
+                <div class="discount-alert">
+                    <strong>⚠️ Conditions of the Promotion:</strong><br>
+                    <ul style="text-align: left; display: inline-block; margin-top: 10px;">
+                        <li><strong>Massive Demand:</strong> Due to the 70% discount covered by the foundation, inventory is depleting at an alarming rate.</li>
+                        <li><strong>Limit:</strong> Maximum of 4 tubes per one order to prevent commercial resale.</li>
+                        <li><strong>Localization:</strong> This discount is guaranteed for residents accessing this page today, <span id="live-date-exact" class="highlight-yellow" style="padding: 2px 5px;"></span>.</li>
+                    </ul>
+                </div>
+
+                <div class="timer-wrapper">
+                    <p class="timer-title">Offer Expires In:</p>
+                    <div class="countdown-timer">
+                        <div class="time-block">
+                            <span id="timer-hours">00</span>
+                            <small>Hours</small>
+                        </div>
+                        <span class="timer-separator">:</span>
+                        <div class="time-block">
+                            <span id="timer-minutes">00</span>
+                            <small>Minutes</small>
+                        </div>
+                        <span class="timer-separator">:</span>
+                        <div class="time-block">
+                            <span id="timer-seconds">00</span>
+                            <small>Seconds</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-image-offer">
+                    <img src="/lp/kinzeno_v1/images/product.png" alt="Kinzeno Gel concept">
+                </div>
+
+                <p class="offer-urgency">Stock is depleting rapidly. Every day you wait, the cartilage damage advances further. Don't let pain steal another night of sleep or another year of your life — reclaim the joy of movement right now.</p>
+
+                <div class="cta-container large-cta" style="margin-bottom: 0;">
+                    <a href="https://clicks2scale.com/click?o=14418&a=1712" target="_blank" class="order-button button-main pulse-effect huge-btn">CLICK HERE TO ORDER KINZENO GEL WITH 70% DISCOUNT</a>
+                    <p class="privacy-note"><i class="fas fa-shield-alt"></i> Secure checkout. 100% Money-Back Satisfaction Guarantee.</p>
+                </div>
+            </div>
+            
+             <p style="margin-top: 30px; font-style: italic; text-align: center;">You are standing at a fork in the road. One path leads where you have already been heading — more pills, more sleepless nights, more of your life surrendered to pain that only gets worse. The other path starts today, with a single decision: claim your subsidized supply of Kinzeno Gel risk-free, stop the degeneration before it becomes permanent, and take back the active, independent life you refuse to give up.</p>
+             
+        </article>
+
+        <section class="social-comments-section">
+            <div class="comments-header">
+                <h3>Recent Activity (17)</h3>
+                <span class="sort-by">Sort by: <strong>Top</strong> ▼</span>
+            </div>
+            <div class="comment-thread">
+                <div class="comment">
+                    <div class="comment-avatar"><img src="/lp/kinzeno_v1/images/ava1.jpg" alt="Avatar"></div>
+                    <div class="comment-body">
+                        <div class="comment-content">
+                            <span class="comment-name">Sarah Jenkins</span>
+                            <p class="comment-text">Is this available in pharmacies or only online? I really need something for my wrist arthritis, the swelling is getting worse.</p>
+                        </div>
+                        <div class="comment-actions">
+                            <span>Like</span> · <span>Reply</span> · <span class="comment-time">1 hr</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comment reply">
+                    <div class="comment-avatar"><img src="/lp/kinzeno_v1/images/ava2.jpg" alt="Avatar"></div>
+                    <div class="comment-body">
+                        <div class="comment-content">
+                            <span class="comment-name">Mike Ross</span>
+                            <p class="comment-text">The article says Big Pharma tried to ban it, so it's unlikely you'll find it in a regular pharmacy. I just ordered through the link above, got the 70% discount!</p>
+                        </div>
+                        <div class="comment-image-attachment">
+                            <img src="/lp/kinzeno_v1/images/3.jpg" alt="User photo">
+                        </div>
+                        <div class="comment-actions">
+                            <span>Like</span> <span class="like-count">👍 14</span> · <span>Reply</span> · <span class="comment-time">45 mins</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comment">
+                    <div class="comment-avatar"><img src="/lp/kinzeno_v1/images/ava6.jpg" alt="Avatar"></div>
+                    <div class="comment-body">
+                        <div class="comment-content">
+                            <span class="comment-name">David H.</span>
+                            <p class="comment-text">Being an auto mechanic for 30 years absolutely destroyed my knuckles. I was getting to the point where I couldn't even hold a wrench without wincing in pain. Been rubbing this Japanese gel into my joints every morning for about 20 days. The stiffness is 100% gone. If you work with your hands and need them to pay the bills, this is a must-buy.</p>
+                        </div>
+
+                        <div class="comment-image-attachment">
+                            <img src="/lp/kinzeno_v1/images/2.jpeg" alt="User photo">
+                        </div>
+
+                        <div class="comment-actions">
+                            <span>Like</span> <span class="like-count">👍 89</span> · <span>Reply</span> · <span class="comment-time">1 hr</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comment">
+                    <div class="comment-avatar"><img src="/lp/kinzeno_v1/images/ava3.jpg" alt="Avatar"></div>
+                    <div class="comment-body">
+                        <div class="comment-content">
+                            <span class="comment-name">George B.</span>
+                            <p class="comment-text">I've tried everything for my lower back pain. Can someone who has actually used Kinzeno Gel confirm if it really works as fast as they claim?</p>
+                        </div>
+                        <div class="comment-actions">
+                            <span>Like</span> · <span>Reply</span> · <span class="comment-time">2 hrs</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comment reply author-reply">
+                    <div class="comment-avatar"><img src="/lp/kinzeno_v1/images/docAva.png" alt="Avatar"></div>
+                    <div class="comment-body">
+                        <div class="comment-content">
+                            <span class="comment-name" style="color: #d32f2f;">Dr. Kinzeno <i class="fas fa-check-circle verified-icon"></i></span>
+                            <p class="comment-text">Hi George! Yes, the transdermal delivery is much faster than pills. Most clinical trial participants reported significant pain relief within the first 10-15 minutes. Make sure to claim your discounted supply soon, stock is very limited.</p>
+                        </div>
+                        <div class="comment-actions">
+                            <span>Like</span> <span class="like-count">❤️ 31</span> · <span>Reply</span> · <span class="comment-time">1 hr</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comment">
+                    <div class="comment-avatar"><img src="/lp/kinzeno_v1/images/ava4.jpg" alt="Avatar"></div>
+                    <div class="comment-body">
+                        <div class="comment-content">
+                            <span class="comment-name">Marcus T.</span>
+                            <p class="comment-text">My stomach lining was basically ruined from taking pain pills for my hip arthritis over the last decade. Doctors literally told me to just "live with it" or risk an ulcer. I gave this gel a shot last week. The relief penetrates so deep, and for the first time in years, I slept through the night without waking up in agony. Wish I found this sooner.</p>
+                        </div>
+                        <div class="comment-actions">
+                            <span>Like</span> <span class="like-count">👍 142</span> · <span>Reply</span> · <span class="comment-time">2 hrs</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comment">
+                    <div class="comment-avatar"><img src="/lp/kinzeno_v1/images/ava7.png" alt="Avatar"></div>
+                    <div class="comment-body">
+                        <div class="comment-content">
+                            <span class="comment-name">Brenda W.</span>
+                            <p class="comment-text">My daughter bought me a 3-pack because I was terrified of my upcoming knee surgery. I literally could not climb the stairs to my own bedroom anymore. It sounds crazy, but within 5 days of using Kinzeno, the fluid buildup in my right knee went down drastically. Saw my orthopedic surgeon yesterday and he said we can postpone the operation indefinitely! I'm back to chasing my grandkids in the yard.</p>
+                            
+                        </div>
+
+                        <div class="comment-image-attachment">
+                            <img src="/lp/kinzeno_v1/images/3.jpeg" alt="User photo">
+                        </div>
+                        <div class="comment-actions">
+                            <span>Like</span> <span class="like-count">❤️ 215</span> · <span>Reply</span> · <span class="comment-time">3 hrs</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comment">
+                    <div class="comment-avatar"><img src="/lp/kinzeno_v1/images/ava5.jpg" alt="Avatar"></div>
+                    <div class="comment-body">
+                        <div class="comment-content">
+                            <span class="comment-name">Alice M.</span>
+                            <p class="comment-text">Just ordered 3 tubes for my mom. How long does the shipping usually take to California?</p>
+                        </div>
+                        <div class="comment-actions">
+                            <span>Like</span> <span class="like-count">👍 5</span> · <span>Reply</span> · <span class="comment-time">3 hrs</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cta-container">
+                    <a href="#final-offer-section" class="order-button button-main pulse-effect">ORDER NOW: GET KINZENO GEL</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Опції для місяця і року (Травень 2026)
+            const monthYearOptions = { year: 'numeric', month: 'long' };
+            // Опції для точної дати (May 19, 2026)
+            const exactDateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+            
+            const today = new Date();
+            
+            // Налаштування цільової дати (Травень 2026)
+            const targetDate = new Date(2026, 5, 3); // Місяці починаються з 0, тому 5 - це червень
+            
+            // Якщо поточний рік/місяць більше за цільовий, використовуємо поточний, щоб сторінка виглядала свіжою.
+            // Але за умовою задачі нам потрібно "Published: May 2026". 
+            // Для реального скрипта краще брати поточну дату, але я зроблю жорстку прив'язку до травня 2026, як просили.
+            
+            const displayMonthYear = targetDate.toLocaleDateString('en-US', exactDateOptions);
+            const displayHeaderDate = targetDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            
+            // Заповнення дати в Header (desktop)
+            const desktopHeaderDateEl = document.getElementById('live-date-desktop');
+            if (desktopHeaderDateEl) desktopHeaderDateEl.textContent = displayHeaderDate.toUpperCase();
+            
+            // Заповнення дати під заголовком статті (Published: May 2026)
+            const articleDateEl = document.getElementById('live-date-article');
+            if (articleDateEl) articleDateEl.textContent = displayMonthYear;
+
+            // Заповнення точної дати в блоці умови (today, May 19, 2026)
+            // Тут використовуємо саме ДАТУ, щоб створити ефект терміновості (сьогодні)
+            const currentExactDate = today.toLocaleDateString('en-US', exactDateOptions);
+            const exactDateEl = document.getElementById('live-date-exact');
+            if (exactDateEl) exactDateEl.textContent = currentExactDate;
+
+            // --- Логіка Таймера (до кінця доби) ---
+            function updateTimer() {
+                const now = new Date();
+                const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+                const timeLeft = endOfDay - now;
+
+                if (timeLeft <= 0) {
+                    // Якщо час вийшов, можна перезапустити таймер або зупинити
+                    document.getElementById("timer-hours").textContent = "00";
+                    document.getElementById("timer-minutes").textContent = "00";
+                    document.getElementById("timer-seconds").textContent = "00";
+                    return;
+                }
+
+                const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((timeLeft / 1000 / 60) % 60);
+                const seconds = Math.floor((timeLeft / 1000) % 60);
+
+                document.getElementById("timer-hours").textContent = hours < 10 ? "0" + hours : hours;
+                document.getElementById("timer-minutes").textContent = minutes < 10 ? "0" + minutes : minutes;
+                document.getElementById("timer-seconds").textContent = seconds < 10 ? "0" + seconds : seconds;
+            }
+
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        });
+    </script>
+</body>
+</html>
