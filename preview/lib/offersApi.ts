@@ -1,4 +1,9 @@
-const OFFERS_API_URL = "https://dev.orione.io/api/public/offers"
+const OFFERS_API_PATH = "/api/public/offers"
+
+function getOffersApiUrl(): string {
+  const baseUrl = process.env.OFFERS_API_URL?.replace(/\/+$/, "") || "https://orione.io"
+  return `${baseUrl}${OFFERS_API_PATH}`
+}
 
 export type Block<T> = {
   status: "present" | "empty"
@@ -34,7 +39,7 @@ export async function fetchOffers(): Promise<OffersSuccess | OffersFailure> {
   if (!token) return { ok: false, error: "AUTH_TOKEN is not set in the environment." }
 
   try {
-    const res = await fetch(OFFERS_API_URL, {
+    const res = await fetch(getOffersApiUrl(), {
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
     })
