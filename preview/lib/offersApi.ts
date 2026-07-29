@@ -38,18 +38,40 @@ export async function fetchOffers(): Promise<OffersSuccess | OffersFailure> {
   const token = process.env.AUTH_TOKEN
   if (!token) return { ok: false, error: "AUTH_TOKEN is not set in the environment." }
 
+  const url = getOffersApiUrl()
+
   try {
-    const res = await fetch(getOffersApiUrl(), {
+    const res = await fetch(url, {
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
     })
-    const data = await res.json()
 
-    if (!res.ok || data.ok === false)
-      return { ok: false, error: data.message || data.error || `Request failed with status ${res.status}` }
+    const text = await res.text()
+    let data: unknown
+    try {
+      data = JSON.parse(text)
+    } catch {
+      return {
+        ok: false,
+        error: `Non-JSON response from ${url} (status ${res.status}): ${text.slice(0, 200)}`,
+      }
+    }
+
+    const parsed = data as { ok?: boolean; message?: string; error?: string }
+    if (!res.ok || parsed.ok === false)
+      return {
+        ok: false,
+        error:
+          parsed.message ||
+          parsed.error ||
+          `Request to ${url} failed with status ${res.status}`,
+      }
 
     return data as OffersSuccess
   } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : "Unknown error fetching offers." }
+    return {
+      ok: false,
+      error: `Fetch to ${url} failed: ${err instanceof Error ? err.message : "Unknown error"}`,
+    }
   }
 }
