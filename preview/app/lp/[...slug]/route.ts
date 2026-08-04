@@ -28,18 +28,46 @@ const MIME_TYPES: Record<string, string> = {
   ".mp4": "video/mp4",
 }
 
+const ROOT = path.resolve(LP_ROOT)
+
+function resolveLpFile(slug: string[]): string | null {
+  if (!slug?.length || slug.some(seg => seg === ".." || seg.includes("/") || seg.includes("\\")))
+    return null
+
+  const candidate = path.resolve(path.join(ROOT, ...slug))
+  if (!candidate.startsWith(ROOT + path.sep) && candidate !== ROOT) return null
+
+  try {
+    const st = fs.statSync(candidate)
+    if (st.isFile()) return candidate
+    if (st.isDirectory()) {
+      const indexPath = path.join(candidate, "index.html")
+      if (fs.existsSync(indexPath) && fs.statSync(indexPath).isFile()) return indexPath
+    }
+  } catch {
+    // fall through — maybe slug omitted index.html
+  }
+
+  // /lp/foo → /lp/foo/index.html when the bare path does not exist as a file
+  if (!path.extname(candidate)) {
+    const indexPath = path.join(candidate, "index.html")
+    try {
+      if (fs.statSync(indexPath).isFile()) return indexPath
+    } catch {
+      /* not found */
+    }
+  }
+
+  return null
+}
+
 export async function GET(
   _request: NextRequest,
-  { params }: { params: Promise<{ slug: string[] }> }
+  context: { params: Promise<{ slug: string[] }> | { slug: string[] } }
 ) {
-  const { slug } = await params
-
-  if (!slug?.length || slug.some(seg => seg === ".." || seg.includes("/") || seg.includes("\\")))
-    return new NextResponse("Not found", { status: 404 })
-
-  const filePath = path.join(LP_ROOT, ...slug)
-  if (!filePath.startsWith(LP_ROOT))
-    return new NextResponse("Not found", { status: 404 })
+  const resolved = await context.params
+  const filePath = resolveLpFile(resolved.slug ?? [])
+  if (!filePath) return new NextResponse("Not found", { status: 404 })
 
   let data: Buffer
   try {
@@ -51,6 +79,9 @@ export async function GET(
   const ext = path.extname(filePath).toLowerCase()
   return new NextResponse(new Uint8Array(data), {
     status: 200,
-    headers: { "Content-Type": MIME_TYPES[ext] ?? "application/octet-stream" },
+    headers: {
+      "Content-Type": MIME_TYPES[ext] ?? "application/octet-stream",
+      "Cache-Control": "no-store",
+    },
   })
 }
