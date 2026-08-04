@@ -87,6 +87,13 @@ footer{-ms-flex-negative:0;flex-shrink:0;font-weight:400;margin:auto 0 0;padding
 .video-cta:hover{
   filter:brightness(1.02);
 }
+/* Original site: vertical play art on mobile, landscape on desktop */
+.video__img--desktop{display:none !important;}
+.video__img--mobile{display:block !important;}
+@media (min-width:568px){
+  .video__img--mobile{display:none !important;}
+  .video__img--desktop{display:block !important;}
+}
 
   </style>
 </head>
@@ -126,9 +133,18 @@ footer{-ms-flex-negative:0;flex-shrink:0;font-weight:400;margin:auto 0 0;padding
     aria-label="Watch free presentation"
   >
     <img
-      class="video__img"
+      class="video__img video__img--mobile"
+      src="/lp/hydralift_bridge_v1/images/video/play-img.gif"
+      alt="Play free presentation"
+      width="414"
+      height="738"
+    >
+    <img
+      class="video__img video__img--desktop"
       src="/lp/hydralift_bridge_v1/images/video/play-img-d.gif"
       alt="Play free presentation"
+      width="862"
+      height="486"
     >
   </a>
 </div>
