@@ -31,5 +31,15 @@ jobs:
         run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_HLTR }}"
       - name: Deploy Project healthyrations
         run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_VTTW }}"
+      - name: Deploy Project axclp
+        run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_AXCL }}"
+      - name: Deploy Project enrev
+        run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_ENRV }}"
+      - name: Deploy Project g-song-fit
+        run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_GSNG }}"
+      - name: Deploy Project ontolife
+        run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_ONTL }}"
+      - name: Deploy Project sky-boyton
+        run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_SKBT }}"
 
         
