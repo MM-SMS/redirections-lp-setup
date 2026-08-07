@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const path = require("path")
+
 const nextConfig = {
   // The LP route handler reads src/templates/public/lp at runtime via a
   // dynamically built path, so Next's automatic file tracing can't see it
@@ -22,6 +24,7 @@ const nextConfig = {
           "**/.git/**",
           "**/.next/**",
           "**/src/templates/public/lp/**",
+          path.join(__dirname, "../src/templates/public/lp"),
         ],
       }
     }
