@@ -41,5 +41,17 @@ jobs:
         run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_ONTL }}"
       - name: Deploy Project sky-boyton
         run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_SKBT }}"
+      - name: Deploy Project sky-boyton
+        run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_LVSA }}"
+      - name: Deploy Project sky-boyton
+        run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_AVMK }}"
+      - name: Deploy Project sky-boyton
+        run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_LBCG }}"
+      - name: Deploy Project sky-boyton
+        run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_ENRV }}"
+      - name: Deploy Project sky-boyton
+        run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_PRMH }}"
+      - name: Deploy Project sky-boyton
+        run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_STRM }}"
 
         
