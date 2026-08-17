@@ -10,6 +10,7 @@ export type CampaignRoute = {
   type: string
   landing_page: string | null
   affiliate_url: string | null
+  checkout_url: string | null
   click_id: string | null
   click_id_param: string | null
 }
@@ -84,17 +85,7 @@ async function resolveCampaignPaf(paf: string): Promise<ResolveResult> {
 
   if (!data.found || !data.active) return { found: data.found, active: data.active }
 
-  return {
-    found: true,
-    active: true,
-    route: {
-      type: data.routing_type,
-      landing_page: data.prelander_id ?? null,
-      affiliate_url: data.affiliate_url ?? null,
-      click_id: data.click_id ?? null,
-      click_id_param: data.click_id_param ?? null,
-    },
-  }
+  return { found: true, active: true, route: mapResolveRoute(data) }
 }
 
 /**
@@ -128,32 +119,50 @@ export async function resolveRecipientLink(
 
   if (!data.found || !data.active) return { found: !!data.found, active: !!data.active }
 
+  return { found: true, active: true, route: mapResolveRoute(data) }
+}
+
+function mapResolveRoute(data: {
+  routing_type: string
+  prelander_id?: string | null
+  affiliate_url?: string | null
+  checkout_url?: string | null
+  click_id?: string | null
+  click_id_param?: string | null
+}): CampaignRoute {
   return {
-    found: true,
-    active: true,
-    route: {
-      type: data.routing_type,
-      landing_page: data.prelander_id ?? null,
-      affiliate_url: data.affiliate_url ?? null,
-      click_id: data.click_id ?? null,
-      click_id_param: data.click_id_param ?? null,
-    },
+    type: data.routing_type,
+    landing_page: data.prelander_id ?? null,
+    affiliate_url: data.affiliate_url ?? null,
+    checkout_url: data.checkout_url ?? null,
+    click_id: data.click_id ?? null,
+    click_id_param: data.click_id_param ?? null,
   }
 }
 
-/** Shared post-resolve path: click_id append → default page or LP + injector. */
+/**
+ * CTA / auto-redirect target.
+ * Prefer CRM checkout hop (`/api/public/ck/<paf>/<click_id>`). CRM then 302s to
+ * affiliate_url with click_id. Fall back to the old brand-side append if checkout_url
+ * is missing (older resolve payloads).
+ */
+function navigationUrl(route: CampaignRoute): string | null {
+  if (route.checkout_url) return route.checkout_url
+  if (!route.affiliate_url) return null
+
+  const param = route.type === "sweeply_hosted" ? "aff_click_id" : route.click_id_param
+  return param && route.click_id
+    ? appendQueryParam(route.affiliate_url, param, route.click_id)
+    : route.affiliate_url
+}
+
+/** Shared post-resolve path: checkout_url (or legacy affiliate+click_id) → LP + injector. */
 export function serveCampaignLanding(route: CampaignRoute): NextResponse {
-  const { type, affiliate_url, landing_page, click_id, click_id_param } = route
+  const { type, landing_page } = route
+  const finalUrl = navigationUrl(route)
 
-  if (!affiliate_url)
-    return new NextResponse("Misconfigured: missing affiliate_url", { status: 500 })
-
-  // SPEC 0155: append click_id onto affiliate_url. Sweeply always uses aff_click_id;
-  // everyone else uses click_id_param from the campaign (skip when null).
-  const param = type === "sweeply_hosted" ? "aff_click_id" : click_id_param
-  const finalUrl = param && click_id
-    ? appendQueryParam(affiliate_url, param, click_id)
-    : affiliate_url
+  if (!finalUrl)
+    return new NextResponse("Misconfigured: missing checkout_url and affiliate_url", { status: 500 })
 
   if (!landing_page)
     return html200(renderDefaultRedirectPage(finalUrl))
@@ -170,7 +179,7 @@ export function serveCampaignLanding(route: CampaignRoute): NextResponse {
 
 /**
  * Shared handler for /g/<paf> (new standard) and /go/<paf> (legacy forever).
- * Behavior matches the previous /go route byte-for-byte (no visitor headers, no t=).
+ * Campaign-level resolve only (no visitor headers, no t=). CTA uses checkout_url.
  */
 export async function handleCampaignPafGet(
   request: NextRequest,
