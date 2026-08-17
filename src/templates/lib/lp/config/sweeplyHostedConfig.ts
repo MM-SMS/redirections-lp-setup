@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────
 // Sweeply Hosted config
-// Injects checkout_url (CRM /ck/ hop) into #checkout_cta and a.button-main
+// Injects CTA url (tracked_url or direct_url+click) into #checkout_cta and a.button-main
 // ─────────────────────────────────────────────
 
 export function injectSweeplyHostedScript(html: string, checkoutUrl: string): string {

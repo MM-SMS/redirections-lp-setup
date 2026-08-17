@@ -6,13 +6,16 @@ import { renderDefaultRedirectPage } from "@/lib/lp/config/defaultRedirectPage"
 import { LP_SCRIPT_VERSION } from "@/lib/lp/version"
 import { LEGACY_PAF_REDIRECTS } from "@/lib/lp/legacyPafRedirects"
 
+export type CtaUse = "tracked_url" | "direct_url"
+
 export type CampaignRoute = {
   type: string
   landing_page: string | null
-  affiliate_url: string | null
-  checkout_url: string | null
-  click_id: string | null
-  click_id_param: string | null
+  ctaUse: CtaUse | null
+  trackedUrl: string | null
+  directUrl: string | null
+  clickId: string | null
+  clickParamName: string | null
 }
 
 export type ResolveResult = {
@@ -125,44 +128,70 @@ export async function resolveRecipientLink(
 function mapResolveRoute(data: {
   routing_type: string
   prelander_id?: string | null
+  cta?: {
+    use?: string | null
+    tracked_url?: string | null
+    direct_url?: string | null
+  } | null
+  click?: {
+    id?: string | null
+    param_name?: string | null
+  } | null
   affiliate_url?: string | null
   checkout_url?: string | null
   click_id?: string | null
   click_id_param?: string | null
 }): CampaignRoute {
+  const ctaUse = data.cta?.use === "direct_url" || data.cta?.use === "tracked_url"
+    ? data.cta.use
+    : null
+
   return {
     type: data.routing_type,
     landing_page: data.prelander_id ?? null,
-    affiliate_url: data.affiliate_url ?? null,
-    checkout_url: data.checkout_url ?? null,
-    click_id: data.click_id ?? null,
-    click_id_param: data.click_id_param ?? null,
+    ctaUse,
+    trackedUrl: data.cta?.tracked_url ?? data.checkout_url ?? null,
+    directUrl: data.cta?.direct_url ?? data.affiliate_url ?? null,
+    clickId: data.click?.id ?? data.click_id ?? null,
+    clickParamName: data.click?.param_name ?? data.click_id_param ?? null,
   }
 }
 
-/**
- * CTA / auto-redirect target.
- * Prefer CRM checkout hop (`/api/public/ck/<paf>/<click_id>`). CRM then 302s to
- * affiliate_url with click_id. Fall back to the old brand-side append if checkout_url
- * is missing (older resolve payloads).
- */
-function navigationUrl(route: CampaignRoute): string | null {
-  if (route.checkout_url) return route.checkout_url
-  if (!route.affiliate_url) return null
-
-  const param = route.type === "sweeply_hosted" ? "aff_click_id" : route.click_id_param
-  return param && route.click_id
-    ? appendQueryParam(route.affiliate_url, param, route.click_id)
-    : route.affiliate_url
+function withClickId(url: string, param: string | null, clickId: string | null): string {
+  if (!param || !clickId) return url
+  try {
+    if (new URL(url).searchParams.has(param)) return url
+  } catch {
+    /* append below */
+  }
+  return appendQueryParam(url, param, clickId)
 }
 
-/** Shared post-resolve path: checkout_url (or legacy affiliate+click_id) → LP + injector. */
+/**
+ * CTA / auto-redirect target from resolve.
+ * tracked_url → CRM /ck/ hop as-is.
+ * direct_url  → affiliate URL + click.param_name=click.id.
+ */
+function navigationUrl(route: CampaignRoute): string | null {
+  const use = route.ctaUse ?? (route.trackedUrl ? "tracked_url" : route.directUrl ? "direct_url" : null)
+
+  if (use === "tracked_url") return route.trackedUrl
+  if (use === "direct_url" && route.directUrl) {
+    const param =
+      route.clickParamName ??
+      (route.type === "sweeply_hosted" ? "aff_click_id" : null)
+    return withClickId(route.directUrl, param, route.clickId)
+  }
+  return null
+}
+
+/** Shared post-resolve path: tracked/direct CTA URL → LP + injector. */
 export function serveCampaignLanding(route: CampaignRoute): NextResponse {
   const { type, landing_page } = route
   const finalUrl = navigationUrl(route)
 
   if (!finalUrl)
-    return new NextResponse("Misconfigured: missing checkout_url and affiliate_url", { status: 500 })
+    return new NextResponse("Misconfigured: missing CTA url", { status: 500 })
 
   if (!landing_page)
     return html200(renderDefaultRedirectPage(finalUrl))
@@ -179,7 +208,7 @@ export function serveCampaignLanding(route: CampaignRoute): NextResponse {
 
 /**
  * Shared handler for /g/<paf> (new standard) and /go/<paf> (legacy forever).
- * Campaign-level resolve only (no visitor headers, no t=). CTA uses checkout_url.
+ * Campaign-level resolve only (no visitor headers, no t=). CTA follows cta.use.
  */
 export async function handleCampaignPafGet(
   request: NextRequest,
