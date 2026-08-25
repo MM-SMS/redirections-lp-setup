@@ -19,13 +19,30 @@
 
 ## 2. Поставить пакет в репо бренда
 
-В корне Next.js бренда:
+В корне Next.js бренда в `package.json`:
 
-```bash
-npm install github:MM-SMS/orione-content-link#main
+```json
+{
+  "dependencies": {
+    "orione-content-link": "github:MM-SMS/orione-content-link#main"
+  },
+  "scripts": {
+    "prebuild": "orione-content-link-ensure",
+    "build": "next build"
+  }
+}
 ```
 
-После install пакет **сам создаёт / перезаписывает** корневой `middleware.ts`:
+```bash
+npm install
+```
+
+**Почему `prebuild`:** `next build` сам middleware **не создаёт**. Файл пишет
+postinstall при `npm install` и/или `orione-content-link-ensure` перед билдом.
+Если удалил `middleware.ts` и просто задеплоил — install мог взяться из кэша
+без postinstall → файла нет. `prebuild` чинит это на каждом деплое.
+
+После install/ensure появится корневой `middleware.ts`:
 
 ```ts
 export { middleware } from "orione-content-link"
@@ -37,7 +54,7 @@ export const config = {
 
 (`config` только inline — Next.js не принимает `export { config } from "…"`.)
 - Кастомный/Supabase middleware **сотрётся**, если не поставить skip (см. §5).
-- Закоммить: `package.json`, `package-lock.json`, `middleware.ts`.
+- Закоммить: `package.json`, `package-lock.json`, желательно и `middleware.ts`.
 - Запушь и задеплой бренд на Vercel.
 
 Закрепить версию (рекомендуется для prod):
