@@ -3,9 +3,11 @@ import { NextResponse } from "next/server";
  * Orione /c/{code} content short links — Edge-safe helpers for Next.js middleware.
  *
  * OpenAPI / SPEC 0328:
- *   GET {CAMPAIGNS_MNG_URL}/api/public/content-link?code=&host=
+ *   GET {CAMPAIGNS_MNG_URL}/api/public/resolve/content?code=&host=
  *   Auth: Samples API key (content-links:read) — NOT brand token
  *         Authorization: Bearer <token>
+ *
+ *   v2.0 path (replaces /api/public/content-link — body/auth unchanged).
  *
  * Env (brand Vercel):
  *   ORIONE_CONTENT_LINK_TOKEN
@@ -14,8 +16,9 @@ import { NextResponse } from "next/server";
  *   ORIONE_CONTENT_LINK_ARTICLE_PATHS      (optional, comma paths)
  *   ORIONE_CONTENT_LINK_NOT_FOUND_PATH     (optional, default /not-found)
  *
- * Brand without other middleware:
- *   export { middleware, config } from "orione-content-link"
+ * Brand without other middleware (config MUST be inline — Next forbids re-export):
+ *   export { middleware } from "orione-content-link"
+ *   export const config = { matcher: ["/c/:code*"] }
  *
  * Brand with Supabase (or anything else) — wire manually:
  *   const hit = await handleContentLink(request)
@@ -76,7 +79,7 @@ function readEnv() {
     };
 }
 async function fetchContentLink(code, host, token, apiBase) {
-    const url = new URL(`${apiBase}/api/public/content-link`);
+    const url = new URL(`${apiBase}/api/public/resolve/content`);
     url.searchParams.set("code", code);
     url.searchParams.set("host", apexHost(host));
     const res = await fetch(url.toString(), {

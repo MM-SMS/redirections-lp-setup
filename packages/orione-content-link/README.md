@@ -1,6 +1,9 @@
 # orione-content-link
 
-Next.js middleware for Orione **`/c/{code}`** content short links (SPEC 0328).
+Next.js middleware for Orione **`/c/{code}`** content short links (SPEC 0328 / API 2.x).
+
+Calls `GET /api/public/resolve/content` (v2 path; replaces deprecated `/api/public/content-link`).
+Auth and response body are unchanged.
 
 ## Install
 

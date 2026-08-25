@@ -151,7 +151,7 @@ ORIONE_CONTENT_LINK_SKIP_MIDDLEWARE=1 npm install github:MM-SMS/orione-content-l
 ```
 GET https://brand.com/c/{code}
   → middleware (пакет)
-  → GET {CAMPAIGNS_MNG_URL}/api/public/content-link?code=&host=<apex>
+  → GET {CAMPAIGNS_MNG_URL}/api/public/resolve/content?code=&host=<apex>
   → Authorization: Bearer <Samples key>
   → 302 long_url | FALLBACK | /not-found
 ```
