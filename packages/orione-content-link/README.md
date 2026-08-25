@@ -5,13 +5,15 @@ Next.js middleware for Orione **`/c/{code}`** content short links (SPEC 0328 / A
 Calls `GET /api/public/resolve/content` (v2 path; replaces deprecated `/api/public/content-link`).
 Auth and response body are unchanged.
 
-## Install
+## Install (default — no DB / no flag)
+
+Sites already using this package: **change nothing**. Behaviour stays the same.
 
 ```bash
 npm install github:MM-SMS/orione-content-link#main
 ```
 
-On install the package **writes / overwrites** root `middleware.ts`:
+Postinstall writes / overwrites root `middleware.ts`:
 
 ```ts
 export { middleware } from "orione-content-link"
@@ -21,31 +23,34 @@ export const config = {
 }
 ```
 
-(`config` must be inline — Next.js cannot re-export it from a package.)
+## Install with Supabase / DB session
 
-To **keep** an existing custom/Supabase middleware:
+In the brand `package.json` add a flag (same file as dependencies):
 
-```bash
-ORIONE_CONTENT_LINK_SKIP_MIDDLEWARE=1 npm install github:MM-SMS/orione-content-link#main
+```json
+{
+  "dependencies": {
+    "orione-content-link": "github:MM-SMS/orione-content-link#main"
+  },
+  "orione-content-link": {
+    "withDb": true,
+    "updateSessionFrom": "@/lib/supabase/auth/middleware"
+  }
+}
 ```
 
-Pin a commit when you want a fixed version:
+Then `npm install`. Postinstall overwrites `middleware.ts` with content-link **plus** `updateSession`.
 
-```bash
-npm install github:MM-SMS/orione-content-link#<commit>
-```
+`updateSessionFrom` defaults to `@/lib/supabase/auth/middleware` if omitted.
+
+Env overrides (optional):
+
+- `ORIONE_CONTENT_LINK_WITH_DB=1`
+- `ORIONE_CONTENT_LINK_UPDATE_SESSION_FROM=...`
+- `ORIONE_CONTENT_LINK_SKIP_MIDDLEWARE=1` — never write the file
 
 Peer: `next` >= 14.
 
-Vercel / CI with `--ignore-scripts`: postinstall won't run — commit `middleware.ts` yourself:
-
-```ts
-export { middleware } from "orione-content-link"
-
-export const config = {
-  matcher: ["/c/:code*"],
-}
-```
 ## Env (brand Vercel)
 
 | Variable | Required |
@@ -55,10 +60,6 @@ export const config = {
 | `ORIONE_CONTENT_LINK_FALLBACK_URL` | optional |
 | `ORIONE_CONTENT_LINK_ARTICLE_PATHS` | optional |
 | `ORIONE_CONTENT_LINK_NOT_FOUND_PATH` | optional, default `/not-found` |
-
-## Brand with Supabase (manual)
-
-Install with skip, then wire `handleContentLink` before `updateSession` (see repo README / scaffolder docs).
 
 ## Publish (maintainers)
 

@@ -1,15 +1,8 @@
 /**
- * Example for brands with Supabase — prefer package.json flag instead of copying:
- *
- *   "orione-content-link": {
- *     "withDb": true,
- *     "updateSessionFrom": "@/lib/supabase/auth/middleware"
- *   }
- *
- * Then: npm install github:MM-SMS/orione-content-link#main
- * postinstall overwrites middleware.ts with content-link + updateSession.
+ * Auto-written by orione-content-link (withDb).
+ * Do not edit by hand — change flags in package.json and reinstall.
  */
-import { updateSession } from "@/lib/supabase/auth/middleware"
+import { updateSession } from "__UPDATE_SESSION_FROM__"
 import { handleContentLink } from "orione-content-link"
 import type { NextRequest } from "next/server"
 

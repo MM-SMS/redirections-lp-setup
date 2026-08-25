@@ -1,10 +1,19 @@
 #!/usr/bin/env node
 /**
- * On install into a brand app: always write/overwrite root middleware.ts
- * (re-export of this package).
+ * Write/overwrite root middleware.ts on install.
+ *
+ * Default (no flag) — same as before: content-link only template.
+ *
+ * With DB — brand package.json:
+ *   "orione-content-link": {
+ *     "withDb": true,
+ *     "updateSessionFrom": "@/lib/supabase/auth/middleware"
+ *   }
  *
  * Env:
- *   ORIONE_CONTENT_LINK_SKIP_MIDDLEWARE=1 — never write (keep Supabase/custom)
+ *   ORIONE_CONTENT_LINK_SKIP_MIDDLEWARE=1 — never write
+ *   ORIONE_CONTENT_LINK_WITH_DB=1 — force with-db template
+ *   ORIONE_CONTENT_LINK_UPDATE_SESSION_FROM — override import path when withDb
  */
 const fs = require("fs")
 const path = require("path")
@@ -23,14 +32,53 @@ if (path.resolve(projectRoot) === path.resolve(packageRoot)) {
   process.exit(0)
 }
 
-const template = path.join(packageRoot, "templates", "middleware.ts")
-const dest = path.join(projectRoot, "middleware.ts")
+function readBrandConfig() {
+  const pkgPath = path.join(projectRoot, "package.json")
+  if (!fs.existsSync(pkgPath)) return {}
+  try {
+    const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"))
+    const cfg = pkg["orione-content-link"]
+    return cfg && typeof cfg === "object" ? cfg : {}
+  } catch {
+    return {}
+  }
+}
 
+const brandCfg = readBrandConfig()
+const withDb =
+  process.env.ORIONE_CONTENT_LINK_WITH_DB === "1" ||
+  brandCfg.withDb === true
+
+const updateSessionFrom =
+  process.env.ORIONE_CONTENT_LINK_UPDATE_SESSION_FROM ||
+  brandCfg.updateSessionFrom ||
+  "@/lib/supabase/auth/middleware"
+
+const dest = path.join(projectRoot, "middleware.ts")
+const existed = fs.existsSync(dest)
+
+if (withDb) {
+  const templatePath = path.join(packageRoot, "templates", "middleware.with-db.ts")
+  if (!fs.existsSync(templatePath)) {
+    log("templates/middleware.with-db.ts missing — skipped")
+    process.exit(0)
+  }
+  let body = fs.readFileSync(templatePath, "utf8")
+  body = body.split("__UPDATE_SESSION_FROM__").join(updateSessionFrom)
+  fs.writeFileSync(dest, body)
+  log(
+    existed
+      ? `overwrote ${dest} (withDb, updateSession from ${updateSessionFrom})`
+      : `wrote ${dest} (withDb, updateSession from ${updateSessionFrom})`
+  )
+  process.exit(0)
+}
+
+// Default — unchanged standalone template
+const template = path.join(packageRoot, "templates", "middleware.ts")
 if (!fs.existsSync(template)) {
   log("templates/middleware.ts missing — skipped")
   process.exit(0)
 }
-
-const existed = fs.existsSync(dest)
 fs.copyFileSync(template, dest)
 log(existed ? `overwrote ${dest}` : `wrote ${dest}`)

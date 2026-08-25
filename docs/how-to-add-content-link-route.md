@@ -36,7 +36,7 @@ export const config = {
 ```
 
 (`config` только inline — Next.js не принимает `export { config } from "…"`.)
-- Кастомный/Supabase middleware **сотрётся**, если не поставить skip (см. §5).
+- Кастомный middleware **сотрётся** без флага `withDb` / без skip (см. §5).
 - Закоммить: `package.json`, `package-lock.json`, `middleware.ts`.
 - Запушь и задеплой бренд на Vercel.
 
@@ -90,31 +90,30 @@ Apex host: `dev.brand.com` / `www.brand.com` → в CRM уходит `brand.com`
 
 ---
 
-## 5. Бренд уже с Supabase middleware
+## 5. Бренд с Supabase / БД
 
-Не даём postinstall затереть файл:
+В `package.json` бренда добавь флаг (сайты **без** флага остаются на обычном шаблоне):
+
+```json
+{
+  "dependencies": {
+    "orione-content-link": "github:MM-SMS/orione-content-link#main"
+  },
+  "orione-content-link": {
+    "withDb": true,
+    "updateSessionFrom": "@/lib/supabase/auth/middleware"
+  }
+}
+```
 
 ```bash
-ORIONE_CONTENT_LINK_SKIP_MIDDLEWARE=1 npm install github:MM-SMS/orione-content-link#main
+npm install
 ```
 
-В существующий `middleware.ts` вручную:
+Postinstall перезапишет `middleware.ts`: сначала `/c/`, потом `updateSession`.  
+`updateSessionFrom` по умолчанию `@/lib/supabase/auth/middleware`.
 
-```ts
-import { updateSession } from "@/lib/supabase/auth/middleware"
-import { handleContentLink } from "orione-content-link"
-import type { NextRequest } from "next/server"
-
-export async function middleware(request: NextRequest) {
-  const content = await handleContentLink(request)
-  if (content) return content
-  return updateSession(request)
-}
-
-// matcher — оставь свой широкий (как был для Supabase)
-```
-
-Шаблон: `src/templates/middleware.with-supabase.ts` в redirections-lp-setup.
+Альтернатива вручную: `ORIONE_CONTENT_LINK_SKIP_MIDDLEWARE=1` и правка middleware сам.
 
 ---
 

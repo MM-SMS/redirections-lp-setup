@@ -1,6 +1,6 @@
 {
   "name": "orione-content-link",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Next.js middleware for Orione /c/{code} content short links (SPEC 0328)",
   "type": "module",
   "main": "./dist/index.js",
