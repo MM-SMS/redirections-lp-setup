@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 /**
- * On install into a brand app: write root middleware.ts (re-export).
- * Skips if middleware.ts already exists (Supabase / custom) unless FORCE=1.
+ * On install into a brand app: always write/overwrite root middleware.ts
+ * (re-export of this package).
  *
  * Env:
- *   ORIONE_CONTENT_LINK_FORCE_MIDDLEWARE=1  — overwrite existing middleware.ts
- *   ORIONE_CONTENT_LINK_SKIP_MIDDLEWARE=1   — never write
+ *   ORIONE_CONTENT_LINK_SKIP_MIDDLEWARE=1 — never write (keep Supabase/custom)
  */
 const fs = require("fs")
 const path = require("path")
@@ -17,11 +16,9 @@ if (process.env.ORIONE_CONTENT_LINK_SKIP_MIDDLEWARE === "1") {
   process.exit(0)
 }
 
-// Directory of the app that ran `npm install` (not node_modules/…)
 const projectRoot = process.env.INIT_CWD || process.cwd()
 const packageRoot = path.resolve(__dirname, "..")
 
-// Installing this package's own deps — don't write middleware into the package repo
 if (path.resolve(projectRoot) === path.resolve(packageRoot)) {
   process.exit(0)
 }
@@ -34,13 +31,6 @@ if (!fs.existsSync(template)) {
   process.exit(0)
 }
 
-const force = process.env.ORIONE_CONTENT_LINK_FORCE_MIDDLEWARE === "1"
-
-if (fs.existsSync(dest) && !force) {
-  log(`middleware.ts already exists at ${dest} — left untouched`)
-  log("Set ORIONE_CONTENT_LINK_FORCE_MIDDLEWARE=1 to overwrite")
-  process.exit(0)
-}
-
+const existed = fs.existsSync(dest)
 fs.copyFileSync(template, dest)
-log(force ? `overwrote ${dest}` : `wrote ${dest}`)
+log(existed ? `overwrote ${dest}` : `wrote ${dest}`)

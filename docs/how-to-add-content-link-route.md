@@ -25,13 +25,13 @@
 npm install github:MM-SMS/orione-content-link#main
 ```
 
-После install пакет **сам создаёт** корневой `middleware.ts`:
+После install пакет **сам создаёт / перезаписывает** корневой `middleware.ts`:
 
 ```ts
 export { middleware, config } from "orione-content-link"
 ```
 
-- Если `middleware.ts` **уже был** (Supabase и т.п.) — **не перезапишет**. Тогда см. §5.
+- Кастомный/Supabase middleware **сотрётся**, если не поставить skip (см. §5).
 - Закоммить: `package.json`, `package-lock.json`, `middleware.ts`.
 - Запушь и задеплой бренд на Vercel.
 
@@ -120,15 +120,14 @@ npm install github:MM-SMS/orione-content-link#main
 # закоммить lockfile, задеплой
 ```
 
-Логика `/c/` обновляется из пакета. Однострочный `middleware.ts` трогать не нужно  
-(если его писал postinstall).
+Логика `/c/` обновляется из пакета. Однострочный `middleware.ts` снова перезапишется
+postinstall’ом при следующем install.
 
-Принудительно перезаписать middleware (осторожно, сотрёт кастом):
+Чтобы **не** затирать кастомный middleware:
 
 ```bash
-ORIONE_CONTENT_LINK_FORCE_MIDDLEWARE=1 npm install github:MM-SMS/orione-content-link#main
+ORIONE_CONTENT_LINK_SKIP_MIDDLEWARE=1 npm install github:MM-SMS/orione-content-link#main
 ```
-
 ---
 
 ## 7. Чеклист на один бренд

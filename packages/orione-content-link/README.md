@@ -8,26 +8,24 @@ Next.js middleware for Orione **`/c/{code}`** content short links (SPEC 0328).
 npm install github:MM-SMS/orione-content-link#main
 ```
 
-On install the package **writes `middleware.ts`** into the brand project root
-(re-export of this package). If `middleware.ts` already exists, it is **not**
-overwritten (so Supabase brands stay safe).
+On install the package **writes / overwrites** root `middleware.ts`
+(re-export of this package).
 
-Pin a commit/tag when you want a fixed version:
+To **keep** an existing custom/Supabase middleware:
 
 ```bash
-npm install github:MM-SMS/orione-content-link#v1.1.0
+ORIONE_CONTENT_LINK_SKIP_MIDDLEWARE=1 npm install github:MM-SMS/orione-content-link#main
+```
+
+Pin a commit when you want a fixed version:
+
+```bash
+npm install github:MM-SMS/orione-content-link#<commit>
 ```
 
 Peer: `next` >= 14.
 
-### Force / skip writing middleware.ts
-
-```bash
-ORIONE_CONTENT_LINK_FORCE_MIDDLEWARE=1 npm install github:MM-SMS/orione-content-link#main
-ORIONE_CONTENT_LINK_SKIP_MIDDLEWARE=1 npm install ...   # never write the file
-```
-
-Vercel / CI often use `npm ci --ignore-scripts` — then copy once locally or drop:
+Vercel / CI with `--ignore-scripts`: postinstall won't run — commit `middleware.ts` yourself:
 
 ```ts
 export { middleware, config } from "orione-content-link"
@@ -45,19 +43,7 @@ export { middleware, config } from "orione-content-link"
 
 ## Brand with Supabase (manual)
 
-Install with skip, or leave existing middleware and wire yourself:
-
-```ts
-import { updateSession } from "@/lib/supabase/auth/middleware"
-import { handleContentLink } from "orione-content-link"
-import type { NextRequest } from "next/server"
-
-export async function middleware(request: NextRequest) {
-  const content = await handleContentLink(request)
-  if (content) return content
-  return updateSession(request)
-}
-```
+Install with skip, then wire `handleContentLink` before `updateSession` (see repo README / scaffolder docs).
 
 ## Publish (maintainers)
 
