@@ -1,0 +1,44 @@
+{
+  "name": "orione-content-link",
+  "version": "1.1.0",
+  "description": "Next.js middleware for Orione /c/{code} content short links (SPEC 0328)",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "templates",
+    "scripts",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "postinstall": "node ./scripts/postinstall.cjs",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "next": ">=14"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "next": "^15.0.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "keywords": [
+    "orione",
+    "nextjs",
+    "middleware",
+    "content-link"
+  ]
+}

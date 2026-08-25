@@ -1,0 +1,8 @@
+# Standalone redirect service (separate repo, not part of this project)
+redirect-service/
+
+# deps
+node_modules/
+**/node_modules/
+.DS_Store
+**/tsconfig.tsbuildinfo
