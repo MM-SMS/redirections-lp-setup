@@ -8,29 +8,7 @@ Next.js middleware for Orione **`/c/{code}`** content short links (SPEC 0328).
 npm install github:MM-SMS/orione-content-link#main
 ```
 
-### Important: install ≠ build
-
-`next build` **does not** create `middleware.ts`. The file is written by:
-
-1. **postinstall** when npm installs this package, and/or  
-2. **prebuild** (recommended on Vercel) — runs before every build:
-
-```json
-{
-  "scripts": {
-    "prebuild": "orione-content-link-ensure",
-    "build": "next build"
-  },
-  "dependencies": {
-    "orione-content-link": "github:MM-SMS/orione-content-link#main"
-  }
-}
-```
-
-Without `prebuild`, if you delete `middleware.ts` and only redeploy, Vercel may reuse
-a cached install and **not** re-run postinstall → file stays missing.
-
-Written file:
+On install the package **writes / overwrites** root `middleware.ts`:
 
 ```ts
 export { middleware } from "orione-content-link"
@@ -42,16 +20,29 @@ export const config = {
 
 (`config` must be inline — Next.js cannot re-export it from a package.)
 
-Skip overwrite (Supabase/custom):
+To **keep** an existing custom/Supabase middleware:
 
 ```bash
-ORIONE_CONTENT_LINK_SKIP_MIDDLEWARE=1 npm install …
+ORIONE_CONTENT_LINK_SKIP_MIDDLEWARE=1 npm install github:MM-SMS/orione-content-link#main
 ```
 
-Or in Vercel env: `ORIONE_CONTENT_LINK_SKIP_MIDDLEWARE=1`.
+Pin a commit when you want a fixed version:
+
+```bash
+npm install github:MM-SMS/orione-content-link#<commit>
+```
 
 Peer: `next` >= 14.
 
+Vercel / CI with `--ignore-scripts`: postinstall won't run — commit `middleware.ts` yourself:
+
+```ts
+export { middleware } from "orione-content-link"
+
+export const config = {
+  matcher: ["/c/:code*"],
+}
+```
 ## Env (brand Vercel)
 
 | Variable | Required |
@@ -64,11 +55,11 @@ Peer: `next` >= 14.
 
 ## Brand with Supabase (manual)
 
-Set `ORIONE_CONTENT_LINK_SKIP_MIDDLEWARE=1`, wire `handleContentLink` yourself.
+Install with skip, then wire `handleContentLink` before `updateSession` (see repo README / scaffolder docs).
 
 ## Publish (maintainers)
 
 ```bash
 npm run build
-# push to MM-SMS/orione-content-link
+# commit dist + templates + scripts, push to MM-SMS/orione-content-link
 ```
