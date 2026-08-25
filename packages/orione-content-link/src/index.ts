@@ -216,7 +216,14 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   return hit ?? NextResponse.next()
 }
 
-/** Matcher for content-only install (`export { middleware, config } from "…"`). */
+/**
+ * Reference matcher only — do NOT `export { config } from "orione-content-link"`.
+ * Next.js requires `export const config = { … }` inline in the app's middleware.ts
+ * (static AST analysis). The postinstall template writes that locally.
+ */
+export const CONTENT_LINK_MATCHER = ["/c/:code*"] as const
+
+/** @deprecated Kept for older imports; prefer inline config in app middleware.ts */
 export const config = {
   matcher: ["/c/:code*"],
 }

@@ -1,5 +1,9 @@
 /**
- * Usually written automatically by `npm install orione-content-link`.
- * Keep this one-liner for brands without other middleware.
+ * Usually written by `npm install orione-content-link`.
+ * `config` must stay inline (Next.js static analysis — no re-export).
  */
-export { middleware, config } from "orione-content-link"
+export { middleware } from "orione-content-link"
+
+export const config = {
+  matcher: ["/c/:code*"],
+}

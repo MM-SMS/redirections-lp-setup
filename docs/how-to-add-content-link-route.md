@@ -28,9 +28,14 @@ npm install github:MM-SMS/orione-content-link#main
 После install пакет **сам создаёт / перезаписывает** корневой `middleware.ts`:
 
 ```ts
-export { middleware, config } from "orione-content-link"
+export { middleware } from "orione-content-link"
+
+export const config = {
+  matcher: ["/c/:code*"],
+}
 ```
 
+(`config` только inline — Next.js не принимает `export { config } from "…"`.)
 - Кастомный/Supabase middleware **сотрётся**, если не поставить skip (см. §5).
 - Закоммить: `package.json`, `package-lock.json`, `middleware.ts`.
 - Запушь и задеплой бренд на Vercel.

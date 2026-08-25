@@ -6,7 +6,13 @@ import { NextRequest, NextResponse } from "next/server";
 export declare function handleContentLink(request: NextRequest): Promise<NextResponse | null>;
 /** Drop-in Next.js middleware: only handles `/c/{code}`, else `next()`. */
 export declare function middleware(request: NextRequest): Promise<NextResponse>;
-/** Matcher for content-only install (`export { middleware, config } from "…"`). */
+/**
+ * Reference matcher only — do NOT `export { config } from "orione-content-link"`.
+ * Next.js requires `export const config = { … }` inline in the app's middleware.ts
+ * (static AST analysis). The postinstall template writes that locally.
+ */
+export declare const CONTENT_LINK_MATCHER: readonly ["/c/:code*"];
+/** @deprecated Kept for older imports; prefer inline config in app middleware.ts */
 export declare const config: {
     matcher: string[];
 };

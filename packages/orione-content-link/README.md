@@ -8,8 +8,17 @@ Next.js middleware for Orione **`/c/{code}`** content short links (SPEC 0328).
 npm install github:MM-SMS/orione-content-link#main
 ```
 
-On install the package **writes / overwrites** root `middleware.ts`
-(re-export of this package).
+On install the package **writes / overwrites** root `middleware.ts`:
+
+```ts
+export { middleware } from "orione-content-link"
+
+export const config = {
+  matcher: ["/c/:code*"],
+}
+```
+
+(`config` must be inline — Next.js cannot re-export it from a package.)
 
 To **keep** an existing custom/Supabase middleware:
 
@@ -28,9 +37,12 @@ Peer: `next` >= 14.
 Vercel / CI with `--ignore-scripts`: postinstall won't run — commit `middleware.ts` yourself:
 
 ```ts
-export { middleware, config } from "orione-content-link"
-```
+export { middleware } from "orione-content-link"
 
+export const config = {
+  matcher: ["/c/:code*"],
+}
+```
 ## Env (brand Vercel)
 
 | Variable | Required |
