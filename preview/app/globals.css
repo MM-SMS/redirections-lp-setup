@@ -259,3 +259,67 @@ a {
   padding: 4px 10px;
   border-radius: 999px;
 }
+
+.login-card {
+  max-width: 380px;
+  margin: 80px auto 0;
+  background: #fff;
+  border: 1px solid #eceef5;
+  border-radius: 16px;
+  padding: 28px 28px 32px;
+  box-shadow: 0 1px 2px rgba(20, 30, 60, 0.04);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.login-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.login-input {
+  font: inherit;
+  font-weight: 400;
+  padding: 10px 12px;
+  border: 1px solid #e2e5ef;
+  border-radius: 10px;
+  background: #f5f6fb;
+}
+
+.login-input:focus {
+  outline: 2px solid #c7c4f0;
+  border-color: #5b53c4;
+  background: #fff;
+}
+
+.login-submit {
+  margin-top: 6px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: #5b53c4;
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 14px;
+  cursor: pointer;
+}
+
+.login-submit:hover {
+  background: #4c45b0;
+}
+
+.login-error {
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: #b42318;
+}
