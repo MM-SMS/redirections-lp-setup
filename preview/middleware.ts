@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import {
   PREVIEW_COOKIE,
   isPreviewAuthConfigured,
-  previewSessionIsValid,
+  readPreviewSession,
 } from "./lib/previewAuth"
 
 export async function middleware(request: NextRequest) {
@@ -10,9 +10,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  if (await previewSessionIsValid(request.cookies.get(PREVIEW_COOKIE)?.value)) {
-    return NextResponse.next()
-  }
+  const session = await readPreviewSession(request.cookies.get(PREVIEW_COOKIE)?.value)
+  if (session) return NextResponse.next()
 
   const login = new URL("/login", request.url)
   const next = request.nextUrl.pathname + request.nextUrl.search

@@ -323,3 +323,40 @@ a {
   font-size: 13px;
   color: #b42318;
 }
+
+.session-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 10px 24px;
+  background: #fff;
+  border-bottom: 1px solid #eceef5;
+}
+
+.session-user {
+  font-size: 13px;
+  font-weight: 700;
+  color: #16213e;
+}
+
+.session-until {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.session-logout {
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: #5b53c4;
+  background: #eef0fa;
+  border: 0;
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.session-logout:hover {
+  background: #e2e4f6;
+}

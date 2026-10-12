@@ -4,8 +4,8 @@ import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import {
   PREVIEW_COOKIE,
-  PREVIEW_COOKIE_MAX_AGE,
   credentialsMatch,
+  previewSessionSeconds,
   signPreviewSession,
 } from "../../lib/previewAuth"
 
@@ -19,13 +19,26 @@ export async function loginAction(formData: FormData): Promise<void> {
     redirect(`/login?error=1&next=${encodeURIComponent(next)}`)
   }
 
-  cookies().set(PREVIEW_COOKIE, await signPreviewSession(user), {
+  const maxAge = previewSessionSeconds()
+  const exp = Math.floor(Date.now() / 1000) + maxAge
+  cookies().set(PREVIEW_COOKIE, await signPreviewSession(user, exp), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: PREVIEW_COOKIE_MAX_AGE,
+    maxAge,
   })
 
   redirect(next)
+}
+
+export async function logoutAction(): Promise<void> {
+  cookies().set(PREVIEW_COOKIE, "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0,
+  })
+  redirect("/login")
 }

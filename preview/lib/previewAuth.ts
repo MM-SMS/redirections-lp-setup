@@ -1,5 +1,5 @@
 export const PREVIEW_COOKIE = "preview_session"
-export const PREVIEW_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
+const DEFAULT_SESSION_HOURS = 8
 
 const encoder = new TextEncoder()
 
@@ -9,6 +9,12 @@ function previewUser(): string {
 
 function previewPassword(): string {
   return process.env.PREVIEW_PASSWORD ?? ""
+}
+
+export function previewSessionSeconds(): number {
+  const hours = Number(process.env.PREVIEW_SESSION_HOURS ?? DEFAULT_SESSION_HOURS)
+  if (!Number.isFinite(hours) || hours <= 0) return DEFAULT_SESSION_HOURS * 60 * 60
+  return Math.round(hours * 60 * 60)
 }
 
 export function isPreviewAuthConfigured(): boolean {
@@ -39,18 +45,29 @@ async function hmacHex(secret: string, message: string): Promise<string> {
   return Array.from(new Uint8Array(sig), (byte) => byte.toString(16).padStart(2, "0")).join("")
 }
 
-export async function signPreviewSession(user: string): Promise<string> {
-  const sig = await hmacHex(`${previewUser()}:${previewPassword()}`, user)
-  return `${user}.${sig}`
+export interface PreviewSession {
+  user: string
+  exp: number
 }
 
-export async function previewSessionIsValid(token: string | undefined): Promise<boolean> {
-  if (!token || !isPreviewAuthConfigured()) return false
-  const dot = token.lastIndexOf(".")
-  if (dot <= 0) return false
-  const user = token.slice(0, dot)
-  const sig = token.slice(dot + 1)
-  if (!safeEqual(user, previewUser())) return false
-  const expected = await hmacHex(`${previewUser()}:${previewPassword()}`, user)
-  return safeEqual(sig, expected)
+export async function signPreviewSession(user: string, exp: number): Promise<string> {
+  const sig = await hmacHex(`${previewUser()}:${previewPassword()}`, `${user}.${exp}`)
+  return `${exp}.${user}.${sig}`
+}
+
+export async function readPreviewSession(token: string | undefined): Promise<PreviewSession | null> {
+  if (!token || !isPreviewAuthConfigured()) return null
+  const first = token.indexOf(".")
+  const last = token.lastIndexOf(".")
+  if (first <= 0 || last <= first) return null
+
+  const exp = Number(token.slice(0, first))
+  const user = token.slice(first + 1, last)
+  const sig = token.slice(last + 1)
+  if (!Number.isFinite(exp) || exp * 1000 <= Date.now()) return null
+  if (!safeEqual(user, previewUser())) return null
+
+  const expected = await hmacHex(`${previewUser()}:${previewPassword()}`, `${user}.${exp}`)
+  if (!safeEqual(sig, expected)) return null
+  return { user, exp }
 }

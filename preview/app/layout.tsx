@@ -1,5 +1,6 @@
 import type { ReactNode } from "react"
 import "./globals.css"
+import { SessionBar } from "./SessionBar"
 
 export const metadata = {
   title: "LP Preview",
@@ -8,7 +9,10 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <SessionBar />
+        {children}
+      </body>
     </html>
   )
 }
