@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 461.54 461.54">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#linear-gradient);
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="230.77" y1="461.54" x2="230.77" y2="0" gradientTransform="translate(230.77 -95.59) rotate(45)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#dd142e"/>
+      <stop offset="1" stop-color="#f75e7a"/>
+    </linearGradient>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <g>
+      <circle class="cls-1" cx="230.77" cy="230.77" r="230.77" transform="translate(-95.59 230.77) rotate(-45)"/>
+      <path class="cls-2" d="M337.88,253.47c-66.07,77.15-99.65,99.87-101.08,100.75-1.76,1.32-3.95,1.87-6.04,1.87s-4.28-.55-6.15-1.87c-1.32-.88-34.9-23.6-100.96-100.75-32.27-37.64-21.4-82.97,6.03-108.32,24.03-22.28,64.86-31.17,101.08-1.43,36.22-29.74,77.04-20.85,101.07,1.43,27.44,25.35,38.3,70.68,6.04,108.32Z"/>
+    </g>
+  </g>
+</svg>

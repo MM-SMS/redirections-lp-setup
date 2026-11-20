@@ -1,0 +1,353 @@
+  :root{
+    --ink:#16181d;
+    --ink-soft:#43474f;
+    --muted:#767b84;
+    --rule:#e3e3df;
+    --paper:#ffffff;
+    --wash:#f7f7f4;
+
+    /* brand blue — same values as the Kinzeno store header the CTA leads to */
+    --accent:#006791;
+    --accent-deep:#00546f;
+    --accent-light:#69c0e3;
+    --accent-wash:#eef6fa;
+    --accent-rule:#cfe4ee;
+    /* the store's blue band, weighted so white text keeps >=4.5:1 across it;
+       the pale end only appears in the last sliver, where no text sits */
+    --brand-band:linear-gradient(to right,#00546f 0%,#006791 50%,#0d80aa 88%,#69c0e3 100%);
+
+    /* gold CTA — the exact gradient used on the store's buy button */
+    --gold:linear-gradient(90deg,#f6e073 0%,#c5921e 23.08%,#f9e37a 49.52%,#c5921e 72.6%,#f0d96c 100%);
+    --gold-hover:linear-gradient(90deg,#f1d64f 0%,#ac7f11 23.08%,#f5dc57 49.52%,#ac7f11 72.6%,#e9cc41 100%);
+    --gold-edge:#a87d12;
+    --gold-soft:#f9e37a;
+    --gold-ink:#141007;
+
+    --alert:#b32218;
+    --wrap:700px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--wash);
+    color:var(--ink);
+    font-family:Georgia,"Iowan Old Style","Times New Roman",serif;
+    font-size:19px;
+    line-height:1.72;
+  }
+  .ui{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+
+  /* ---------- chrome ---------- */
+  .adbar{
+    background:#22252b;color:#c9ccd2;
+    font:600 11px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    letter-spacing:.09em;text-transform:uppercase;text-align:center;
+    padding:8px 16px;
+  }
+  .masthead{
+    background:var(--paper);border-bottom:1px solid var(--rule);
+    border-top:3px solid var(--accent);
+  }
+  .masthead-in{
+    max-width:var(--wrap);margin:0 auto;padding:14px 20px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+  }
+  .logo{
+    font:700 19px/1 Georgia,serif;letter-spacing:-.02em;color:var(--ink);
+    text-decoration:none;
+  }
+  .logo span{color:var(--accent)}
+  .masthead-meta{
+    font:600 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
+  }
+
+  /* ---------- article shell ---------- */
+  .sheet{background:var(--paper);max-width:var(--wrap);margin:0 auto;
+         border-left:1px solid var(--rule);border-right:1px solid var(--rule);}
+  .pad{padding:0 20px}
+  article{padding:34px 0 8px}
+
+  .kicker{
+    font:700 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 14px;
+  }
+  h1{
+    font-size:38px;line-height:1.16;letter-spacing:-.018em;
+    margin:0 0 16px;font-weight:700;
+  }
+  .standfirst{
+    font-size:21px;line-height:1.55;color:var(--ink-soft);margin:0 0 22px;
+  }
+  .byline{
+    border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+    padding:12px 0;margin:0 0 24px;
+    font:400 13px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--muted);
+    display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;
+  }
+  .byline b{color:var(--ink);font-weight:600}
+  .checked{
+    display:inline-flex;align-items:center;gap:5px;
+    color:var(--accent);font-weight:600;
+  }
+
+  p{margin:0 0 22px}
+  h2{
+    font-size:27px;line-height:1.25;letter-spacing:-.015em;
+    margin:40px 0 16px;font-weight:700;
+  }
+  h3{font-size:20px;line-height:1.35;margin:30px 0 10px;font-weight:700}
+  strong{font-weight:700}
+  em{font-style:italic}
+  a{color:var(--accent)}
+
+  figure{margin:28px 0}
+  figure img{display:block;width:100%;height:auto;background:var(--wash)}
+  figcaption{
+    font:400 13px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--muted);padding:9px 0 0;border-bottom:1px solid var(--rule);padding-bottom:11px;
+  }
+
+  blockquote{
+    margin:30px 0;padding:2px 0 2px 20px;border-left:3px solid var(--accent);
+    font-size:23px;line-height:1.45;font-style:italic;color:var(--ink);
+  }
+  blockquote p{margin:0}
+  blockquote cite{
+    display:block;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-style:normal;color:var(--muted);margin-top:10px;
+  }
+
+  /* ---------- boxes ---------- */
+  .box{
+    background:var(--accent-wash);border:1px solid var(--accent-rule);
+    border-left:4px solid var(--accent);
+    padding:20px 22px;margin:28px 0;
+  }
+  .box h4{
+    font:700 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    letter-spacing:.11em;text-transform:uppercase;color:var(--accent);margin:0 0 14px;
+  }
+  .box ul{margin:0;padding:0;list-style:none}
+  .box li{
+    position:relative;padding:0 0 0 26px;margin:0 0 11px;font-size:17.5px;line-height:1.55;
+  }
+  .box li:last-child{margin-bottom:0}
+  .box li::before{
+    content:"";position:absolute;left:6px;top:11px;width:7px;height:7px;
+    background:var(--accent);border-radius:50%;
+  }
+  .box li b{font-weight:700}
+
+  .checklist{margin:24px 0;padding:0;list-style:none}
+  .checklist li{
+    position:relative;padding:0 0 0 30px;margin:0 0 12px;font-size:17.5px;line-height:1.55;
+  }
+  .checklist li::before{
+    content:"✓";position:absolute;left:0;top:0;color:var(--accent);font-weight:700;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  }
+
+  /* ---------- CTA ---------- */
+  .cta-wrap{margin:32px 0;text-align:center}
+  .cta{
+    display:block;width:100%;
+    background:var(--gold);color:var(--gold-ink);text-decoration:none;
+    font:700 19px/1.3 Montserrat,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    letter-spacing:.01em;text-align:center;
+    padding:19px 22px;border-radius:999px;
+    border:1px solid var(--gold-edge);
+    box-shadow:0 2px 5px rgba(20,16,7,.16);
+  }
+  .cta:hover{background:var(--gold-hover)}
+  .cta small{
+    display:block;font-size:13px;font-weight:600;color:#2e2718;
+    margin-top:5px;letter-spacing:.02em;
+  }
+  .cta-note{
+    font:400 13px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--muted);margin-top:10px;
+  }
+
+  /* ---------- timeline ---------- */
+  .stage{border-top:1px solid var(--rule);padding:18px 0 2px}
+  .stage:last-of-type{border-bottom:1px solid var(--rule);margin-bottom:26px}
+  .stage h4{
+    font:700 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    letter-spacing:.11em;text-transform:uppercase;color:var(--accent);margin:0 0 9px;
+  }
+  .stage p{margin:0 0 16px;font-size:18px}
+
+  /* ---------- reviews ---------- */
+  .review{border-top:1px solid var(--rule);padding:20px 0}
+  .review:last-child{border-bottom:1px solid var(--rule)}
+  .review-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .review-head img{width:46px;height:46px;border-radius:50%;object-fit:cover;flex:0 0 46px}
+  .review-name{
+    font:600 15px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  }
+  .review-loc{
+    font:400 12.5px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--muted);
+  }
+  .stars{color:#c5921e;font-size:14px;letter-spacing:1px;margin-left:auto;flex:0 0 auto}
+  .review p{font-size:17.5px;line-height:1.6;margin:0}
+  .verified{
+    display:inline-block;margin-top:9px;
+    font:600 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--accent);
+  }
+
+  /* ---------- cost table ---------- */
+  .costs{width:100%;border-collapse:collapse;margin:24px 0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-size:16px}
+  .costs td{border-bottom:1px solid var(--rule);padding:13px 0}
+  .costs td:last-child{text-align:right;font-weight:600;white-space:nowrap;padding-left:12px}
+  .costs tr:last-child td{border-bottom:none;color:var(--accent);font-weight:700}
+
+  /* ---------- trust ---------- */
+  .pay{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;margin:18px 0 4px}
+  .pay img{height:30px;width:auto;opacity:.85}
+  .trust-line{
+    text-align:center;
+    font:400 13px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--muted);
+  }
+
+  /* ---------- final offer block ---------- */
+  .offer{
+    border:2px solid var(--accent);background:var(--paper);
+    margin:36px 0 30px;
+  }
+  .offer-head{
+    background:var(--brand-band);color:#fff;text-align:center;padding:18px 20px 20px;
+  }
+  .offer-flag{
+    display:block;
+    font:700 11.5px/1 Montserrat,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    letter-spacing:.16em;text-transform:uppercase;opacity:.92;
+  }
+  .offer-pct{
+    display:block;font:700 44px/1.02 Georgia,serif;letter-spacing:-.025em;margin:10px 0 8px;
+  }
+  .offer-sub{
+    display:block;
+    font:500 13.5px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    opacity:.94;max-width:34ch;margin:0 auto;
+  }
+  .offer-body{padding:24px 22px 26px}
+
+  .cd-label{
+    text-align:center;margin:0 0 13px;
+    font:700 11.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    letter-spacing:.13em;text-transform:uppercase;color:var(--muted);
+  }
+  .countdown{display:flex;justify-content:center;gap:9px;margin:0}
+  .cd-unit{
+    background:var(--accent-deep);color:#fff;border-radius:5px;
+    width:80px;padding:11px 0 9px;text-align:center;
+  }
+  .cd-num{
+    display:block;
+    font:700 30px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-variant-numeric:tabular-nums;
+  }
+  .cd-cap{
+    display:block;margin-top:7px;
+    font:600 9.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    letter-spacing:.12em;text-transform:uppercase;opacity:.65;
+  }
+  .offer.expired .cd-unit{background:var(--muted)}
+
+  .offer-scarcity{
+    text-align:center;margin:15px 0 0;
+    font:600 14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--alert);
+  }
+  .offer-rule{border:0;border-top:1px solid var(--rule);margin:20px 0}
+  .offer .checklist{margin:0 0 22px}
+  .offer .checklist li{font-size:16.5px;margin-bottom:10px}
+  .offer .cta{font-size:21px;padding:22px 20px}
+  .offer .cta small{font-size:13.5px;margin-top:6px}
+  .offer .cta-note{margin-top:12px;text-align:center}
+  .offer .pay{margin:20px 0 6px}
+  .offer .pay img{height:26px}
+
+  .stickybar-timer{color:var(--gold-soft);font-variant-numeric:tabular-nums}
+
+  /* ---------- comments ---------- */
+  .comments{border-top:8px solid var(--wash);margin-top:40px;padding-top:26px}
+  .comments h3{
+    font:700 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 20px;
+  }
+  .cmt{display:flex;gap:11px;margin-bottom:20px}
+  .cmt img{width:40px;height:40px;border-radius:50%;object-fit:cover;flex:0 0 40px}
+  .cmt-body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:15px;line-height:1.5;
+  }
+  .cmt-body .n{font-weight:600;display:block;margin-bottom:2px}
+  .cmt-meta{font-size:12px;color:var(--muted);margin-top:6px}
+
+  /* ---------- footer ---------- */
+  footer{
+    background:var(--wash);border-top:1px solid var(--rule);
+    padding:28px 20px 90px;margin-top:34px;
+  }
+  .foot-in{
+    max-width:var(--wrap);margin:0 auto;
+    font:400 12px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--muted);
+  }
+  .foot-in p{margin:0 0 12px}
+  .foot-in b{color:var(--ink-soft)}
+  .foot-links{margin-top:14px}
+  .foot-links a{color:var(--muted);text-decoration:underline;margin-right:14px}
+
+  /* ---------- sticky ---------- */
+  .stickybar{
+    position:fixed;left:0;right:0;bottom:0;z-index:50;
+    background:var(--brand-band);
+    box-shadow:0 -2px 14px rgba(0,0,0,.22);
+    padding:10px 16px;display:none;
+  }
+  .stickybar.on{display:block}
+  .stickybar-in{
+    max-width:var(--wrap);margin:0 auto;display:flex;align-items:center;gap:14px;
+  }
+  .stickybar-txt{
+    font:600 14px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    color:#fff;flex:1 1 auto;
+  }
+  .stickybar-txt small{display:block;font-weight:400;color:rgba(255,255,255,.82);font-size:12px}
+  .stickybar .cta{width:auto;flex:0 0 auto;font-size:16px;padding:13px 24px}
+
+  @media (max-width:520px){ .masthead-meta{display:none} }
+  @media (max-width:640px){
+    body{font-size:18px}
+    h1{font-size:29px}
+    h2{font-size:23px}
+    .standfirst{font-size:19px}
+    blockquote{font-size:20px}
+    .cta{font-size:17px;padding:17px 16px}
+    .offer-pct{font-size:36px}
+    .offer-body{padding:20px 15px 22px}
+    .countdown{gap:7px}
+    .cd-unit{width:auto;flex:1 1 0;padding:10px 0 8px}
+    .cd-num{font-size:26px}
+    .offer .cta{font-size:18px;padding:19px 14px}
+    .offer .checklist li{font-size:15.5px}
+    .stickybar-txt{font-size:13px}
+    .stickybar-txt small{display:none}
+    .stickybar .cta{font-size:15px;padding:12px 16px}
+  }
+  @media (max-width:400px){
+    .stickybar{padding:8px 12px}
+    .stickybar-in{gap:10px}
+    .stickybar-txt{font-size:11px;line-height:1.25;letter-spacing:.01em;flex:0 1 auto}
+    .stickybar-timer{display:block;font-size:16px;font-weight:700;line-height:1.15}
+    .stickybar .cta{font-size:14px;padding:12px 13px}
+  }
