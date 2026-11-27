@@ -1,0 +1,97 @@
+.ch-wrapper {
+  /*margin: 15px;*/
+  margin-top:  35px;
+}
+
+.ch-wrapper .row {
+  display: flex;
+  flex-direction: row;
+  /*flex-wrap: wrap;*/
+  width: 100%;
+  align-items: stretch;
+}
+
+.ch-wrapper .column {
+  /*display: flex;*/
+  /*flex-direction: column;*/
+  /*flex-basis: 100%;*/
+  /*flex: 1;*/
+}
+
+.ch-wrapper .column-lg {
+  width:  65%;
+  align-items: start;
+}
+
+.ch-wrapper .column-sm {
+  width:  35%;
+  /*margin-left: auto;*/
+  align-items: flex-end;
+  
+}
+
+.ch-wrapper a.btn {
+
+}
+
+.ch-wrapper .ch-button {
+  text-decoration:  none !important;
+  /*padding:  5px;*/
+  display: inline-block;
+  text-align: center;
+  padding:  12px 16px;
+}
+
+.ch-wrapper .ch-button.ch-button-primary {
+  background-color: black;
+  color: white;
+}
+
+.ch-wrapper .ch-button.ch-button-secondary {
+  background-color: #90b4b9;
+  color: white;
+}
+
+.page.ast-article-single {
+  padding-top : 35px;
+}
+
+.wu-thank-you-order-details, .wu-thank-you-info, .wu-thank-you-billing-address, #wu-thank-you-order-details, #wu-thank-you-billing-address {
+  display:  none !important;
+}
+
+.fl-list-item-content-text p {
+  margin-bottom: 0 !important;
+}
+
+.fl-list-item-content-text p+br {
+  display: none;
+}
+
+.cta-extended.cta-extended--standard {
+  display: none!important;
+}
+
+.control-nav--search-history.extended-cta.active {
+  display: none!important;
+}
+
+button.fl-builder--menu-item[data-view="ailandingpages"] {
+  display: none;
+}
+
+.single-post .article-header .article-meta,
+.single-post .article-footer
+ {
+  display: none;
+}
+
+.fl-module-list .fl-list .fl-list-item-content-text strong,
+.fl-module-list .fl-list .fl-list-item-content-text b
+ {
+  font-weight: bold !important;
+}
+
+span.fl-builder-button.fl-builder-button-primary[data-action="draft"] {
+  display: none!important;
+}
